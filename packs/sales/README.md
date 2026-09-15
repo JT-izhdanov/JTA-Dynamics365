@@ -26,10 +26,16 @@ it right here de-risks every pack that follows.
 
 | File | Purpose |
 |---|---|
+| [`technical-design.md`](technical-design.md) | **Technical design document** — how this pack is built |
 | [`source-tables.md`](source-tables.md) | Dataverse tables and columns consumed — **draft** |
 | [`metrics.yaml`](metrics.yaml) | Metric definitions — **the source of truth** |
 | `model/` | Semantic model — not yet built |
 | `reports/` | Reports — not yet built |
+
+Start with the [technical design document](technical-design.md) before building anything.
+It carries the Silver and Gold table designs, the semantic model and measure patterns, the
+RLS design, and a numbered build sequence. Two of its findings — D9 and D10 — affect the
+platform and other packs, not just this one.
 
 ## Depends on
 

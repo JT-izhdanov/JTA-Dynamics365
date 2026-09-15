@@ -18,12 +18,20 @@ Build order and GA gates: [`../docs/offering/roadmap.md`](../docs/offering/roadm
 
 ```
 packs/<pack>/
-├── README.md           What it covers, what it does not, known limitations
-├── source-tables.md    Dataverse tables and columns consumed (DRAFT until validated)
-├── metrics.yaml        Metric definitions — THE SOURCE OF TRUTH
-├── model/              Power BI semantic model (see below)
-└── reports/            Power BI reports (see below)
+├── README.md             What it covers, what it does not, known limitations
+├── technical-design.md   How the pack is built — Silver/Gold design, model, RLS, build sequence
+├── source-tables.md      Dataverse tables and columns consumed (DRAFT until validated)
+├── metrics.yaml          Metric definitions — THE SOURCE OF TRUTH
+├── model/                Power BI semantic model (see below)
+└── reports/              Power BI reports (see below)
 ```
+
+A pack gets its `technical-design.md` before implementation starts.
+[`sales/technical-design.md`](sales/technical-design.md) is the reference example and the
+template to follow — it covers scope and assumptions, the Bronze table set, Silver and Gold
+table designs with grains and keys, the semantic model (storage mode, relationships,
+measure patterns), RLS, report pages, orchestration, sizing, reconciliation, open
+decisions, and a numbered build sequence.
 
 ## The rule that matters most
 

@@ -12,6 +12,32 @@ offering release, not per commit.
 
 ## [Unreleased]
 
+### Added — Sales pack technical design
+
+- `packs/sales/technical-design.md` — technical design document for the Dynamics 365 Sales
+  solution: scope and assumptions, Bronze table set, Silver design (conformed dimensions,
+  `dim_opportunity`, five facts, polymorphic customer resolution, per-column time zone
+  treatment), snapshot and derived history design, Gold star schema, semantic model
+  (storage mode, 23 relationships, model hygiene), measure patterns, RLS, 8 report pages,
+  orchestration, sizing, reconciliation, 10 open decisions, and a 14-step build sequence
+- `packs/README.md` — technical design documents are now part of the pack structure, with
+  the Sales document as the reference example
+
+### Changed
+
+- `platform/notebooks/40_gold_conformed_dimensions.py` — documented **open decision D9**
+  against the SCD2 current-rows-only filter. The Sales design shows the filter breaks
+  as-of ownership on snapshot facts, which affects every pack. Needs a platform decision
+  before the first semantic model is built over a snapshot fact
+
+### New findings requiring a decision beyond the Sales pack
+
+- **D9** — whether `gold.dim_owner` (and `dim_customer`, `dim_product`) should publish all
+  SCD2 versions rather than current rows only. Affects snapshot ownership in every pack
+- **D10** — whether contact-owned opportunities require a unified party dimension in place
+  of an account-only `dim_customer`. Would change a conformed dimension, so it needs an ADR
+  if the contact share proves material
+
 ### Added — initial repository definition
 
 **Offering definition**

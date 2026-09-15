@@ -69,6 +69,20 @@ for table in CONFORMED + OPTIONAL_CONFORMED:
     # SCD2 dimensions publish only current rows to Gold for normal reporting. Snapshot
     # facts join the full versioned Silver dimension directly, so that history is
     # attributed to the org structure as it was — see docs/architecture/snapshot-and-history.md
+    #
+    # OPEN DECISION D9 — this filter is contested and needs a decision before the first
+    # pack ships. See packs/sales/technical-design.md §5.2.
+    #
+    # The Sales pack design argues this filter is WRONG once a snapshot fact joins the same
+    # dimension in a Power BI model: a snapshot row carrying an as-of owner version key
+    # finds no matching Gold row and loses its owner entirely. The proposed fix is to
+    # publish ALL versions here (grain = entity version, with is_current / effective_from /
+    # effective_to as attributes), letting transaction facts carry the current version key
+    # and snapshot facts the as-of key. Slicers use the name, which spans versions.
+    #
+    # It affects every pack's snapshot ownership, so it is a platform decision, not a
+    # pack-local one. Resolve it before building the first semantic model over a snapshot
+    # fact — changing it afterwards means reworking Gold, the model, and RLS.
     scd2_filter = " WHERE is_current = true" if table in ("dim_owner", "dim_customer", "dim_product") else ""
 
     spark.sql(
