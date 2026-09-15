@@ -12,6 +12,38 @@ offering release, not per commit.
 
 ## [Unreleased]
 
+### Added — JTP first build project plan
+
+- `docs/delivery/jtp-first-build-plan.md` — development plan for the Sales pack's first
+  build against JourneyTeam's own Dynamics 365 Sales system, with one developer. Two
+  releases, ~124 developer-days including contingency, calendar scenarios by allocation,
+  critical path, single-developer risks, and definition of done
+- Change control classification: JTP is JT **Production**, so development routes through
+  JT Dev and the Link to Fabric enablement is a change request with a documented promotion
+  path and rollback
+- `docs/delivery/playbook.md` — notes that the 6-week customer timeline presumes the JTP
+  build has happened first
+
+### New findings from planning the JTP build
+
+JourneyTeam sells professional services by technology practice as a Microsoft Partner, and
+that shape was not what the Sales pack was drafted against:
+
+- **J1** — practice does not exist in stock Dynamics 365 Sales and may be **line-level**, if
+  one opportunity can span practices. That flips technical design decision **D8**
+  (opportunity products) from optional to mandatory, and risks mis-attributing
+  multi-practice deals
+- **J2** — revenue type mix (project services, managed services annuity, licensing resale,
+  Microsoft-funded) means a single summed pipeline value is misleading
+- **J3** — whether `estimatedvalue` is total contract value or annualised, and whether it is
+  consistent. If mixed, pipeline totals are meaningless regardless of report design
+- **J4** — whether Microsoft-sourced / co-sell pipeline is tracked in Dynamics at all
+- These apply to **any professional-services or Microsoft Partner customer**, so the build
+  may yield a reusable professional-services variant of the pack rather than a JT-specific one
+- **Confidentiality**: the reports contain JourneyTeam's real pipeline, win rates and
+  margins, which conflicts with using JTP as the demo environment. A synthetic dataset is
+  recommended, doubling as the performance test bed JTP is too small to provide
+
 ### Added — Sales pack technical design
 
 - `packs/sales/technical-design.md` — technical design document for the Dynamics 365 Sales

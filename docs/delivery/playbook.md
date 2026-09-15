@@ -1,5 +1,11 @@
 # Delivery playbook
 
+> This is the **customer** delivery playbook. The first build, against JourneyTeam's own
+> Dynamics 365 Sales system, is a different shape — one developer, validation-focused, and
+> change-controlled as an internal JT Production change. It has its own plan:
+> [`jtp-first-build-plan.md`](jtp-first-build-plan.md). The 6-week timeline below is
+> predicated on that build having happened first.
+
 **Three sprints, six weeks.** Assumes no additional customizations and no extra support
 beyond the coaching hours in the purchased tier. Anything beyond the packaged scope is
 additional development, quoted separately.

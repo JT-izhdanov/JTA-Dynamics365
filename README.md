@@ -60,6 +60,7 @@ sales-assets/     Customer-facing deck, one-pagers, demo script
 | Selling this | [`docs/offering/overview.md`](docs/offering/overview.md), [`pricing-and-packaging.md`](docs/offering/pricing-and-packaging.md), [`positioning.md`](docs/offering/positioning.md) |
 | Scoping an engagement | [`docs/delivery/prerequisites-and-access.md`](docs/delivery/prerequisites-and-access.md), [`docs/decisions/0003-project-operations-scope.md`](docs/decisions/0003-project-operations-scope.md) |
 | Delivering an engagement | [`docs/delivery/playbook.md`](docs/delivery/playbook.md) |
+| Working on the JTP first build | [`docs/delivery/jtp-first-build-plan.md`](docs/delivery/jtp-first-build-plan.md) |
 | Building or extending the IP | [`docs/architecture/reference-architecture.md`](docs/architecture/reference-architecture.md), [`platform/README.md`](platform/README.md) |
 | Building a report pack | [`packs/README.md`](packs/README.md) |
 
