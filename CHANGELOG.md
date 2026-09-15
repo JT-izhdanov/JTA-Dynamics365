@@ -12,6 +12,55 @@ offering release, not per commit.
 
 ## [Unreleased]
 
+### Added — analysis of the existing Excel pipeline report
+
+- `docs/reference/jtp-excel-pipeline-report.md` — structural analysis of JourneyTeam's
+  Sales Weekly Pipeline Report (29 sheets, 50 pivots, 6 manual Dynamics exports). Captures
+  the sales model taxonomies, the full metric inventory, the goal model, and the business
+  rules that cannot be inferred from Dataverse
+- `docs/reference/README.md` — folder rules: structure not data, source binaries stay out
+  of the repository
+
+### Settled by that analysis
+
+- **J1** — practice is **both** header (`Primary Product (New)`) and a multi-value
+  additional-practices field, so attribution is many-to-many and needs a bridge table
+- **J2** — revenue type confirmed as `Backlog Type` (6 values); PS and Licensing already
+  separated
+- **J4** — Microsoft-sourced pipeline is tracked, across 5+ overlapping fields, and needs
+  consolidating into one conformed grouping
+- **D2** — close probability is maintained, but in three bands with no sub-50% floor
+- **D3** — targets exist and are rich (rep × quarter × lead source, including funnel
+  conversion targets) but live in a spreadsheet, not Dataverse, so they are a new source
+- **D4** — stage appears to come from `Sales Stage` directly, not a business process flow
+- **D5** — loss reason is populated and usable
+- **J3 remains open** and is now the most important unanswered question: whether
+  `Est. Revenue` on annuity backlog types is total contract value or annualised
+
+### New requirements for the Sales pack
+
+18 requirements not in the pack as drafted, notably:
+
+- A **three-factor weighting model** (stage × relationship × backlog weight) that
+  **replaces** the drafted `Weighted Pipeline Value` definition
+- **Rolling 30/60/90-day pipeline windows**, which are the primary pipeline view rather
+  than fiscal periods
+- **Cohort win rate with maturation gating**, alongside the drafted win rate
+- Forecast categories, practice mapping for 17 legacy values, relationship type,
+  pre-sales resource, mega-deal handling, outlier exclusion variants, and exclusion of
+  system-generated activity types
+- Report pack grows from 8 pages to **11** — Practice Performance, Attainment, and SDR are
+  central to how JourneyTeam operates and were absent
+- **Quota retirement rules** recommended **out of scope for Release 1**; they currently
+  exist as spreadsheet precedent rather than written policy
+
+### Note on the source file
+
+The workbook was **not committed**. It holds real customer names, deal values, and
+named-employee quota and ranking data; git history is permanent and this repository is
+pushed to GitHub. The analysis captures the design intelligence with no names, customers,
+or figures. A structurally redacted copy would be committable if one is wanted.
+
 ### Added — JTP first build project plan
 
 - `docs/delivery/jtp-first-build-plan.md` — development plan for the Sales pack's first

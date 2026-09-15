@@ -39,6 +39,7 @@ docs/
   architecture/   Reference architecture, medallion design, conformance layer, RLS, licensing
   decisions/      Architecture decision records (ADRs)
   delivery/       Prerequisites, sprint playbook, UAT, training, support handoff
+  reference/      Analysis of existing artifacts that inform the offering
 platform/
   notebooks/      Fabric notebooks — Bronze validation, Silver conformance, snapshots, Gold
   pipelines/      Fabric pipeline and scheduling definitions

@@ -32,6 +32,14 @@ it right here de-risks every pack that follows.
 | `model/` | Semantic model — not yet built |
 | `reports/` | Reports — not yet built |
 
+> **Requirements baseline:** JourneyTeam's existing Excel weekly pipeline report has been
+> analysed in
+> [`docs/reference/jtp-excel-pipeline-report.md`](../../docs/reference/jtp-excel-pipeline-report.md).
+> It settles several open questions (J1, J2, J4, D2–D5) and adds **18 requirements not in
+> this pack as drafted** — including a three-factor weighting model that replaces the
+> drafted Weighted Pipeline Value, rolling 30/60/90-day pipeline windows, cohort win rates,
+> and a many-to-many practice bridge. Read it before `metrics.yaml`.
+
 Start with the [technical design document](technical-design.md) before building anything.
 It carries the Silver and Gold table designs, the semantic model and measure patterns, the
 RLS design, and a numbered build sequence. Two of its findings — D9 and D10 — affect the
