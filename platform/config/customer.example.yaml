@@ -1,0 +1,157 @@
+# JourneyTeam Analytics for Dynamics 365 CE — per-customer configuration TEMPLATE
+#
+# Copy this per engagement, fill it in, and store it in the ENGAGEMENT'S OWN SECURE
+# LOCATION. Never commit a real customer's configuration to this repository.
+#
+# Nothing in platform/notebooks/ is hard-coded per customer; every notebook reads this
+# file. That is what makes delivery repeatable.
+#
+# PLACEHOLDERS ONLY BELOW. No tenant IDs, environment URLs, workspace IDs, app
+# registration IDs, secrets, or connection strings belong in this file or in any commit
+# here — not even as examples. Identifiers are supplied at deployment time from the
+# engagement's secure store.
+
+customer:
+  name: "Example Customer"          # used in workspace naming: JTA-<name>-Platform
+  engagement_id: "ENG-0000"
+  # Purchased tier: base | plus | premium | a-la-carte
+  tier: "base"
+  # Packs purchased. Must match directory names under packs/.
+  packs:
+    - sales
+    - customer-service
+  # Conformance layer version deployed. Recorded at handoff; required for any future
+  # upgrade. See docs/offering/roadmap.md — there is no automatic upgrade path yet.
+  conformance_version: "0.1.0-draft"
+
+locale:
+  # Dataverse option-set metadata is per-language. 1033 = en-US.
+  language_code: 1033
+  # Dataverse stores datetimes in UTC. This is the zone reports present in. Handling is
+  # PER-COLUMN, not global — see platform/notebooks/24_silver_conformance_date.py
+  reporting_time_zone: "America/Denver"
+
+fiscal_calendar:
+  dimension_start_date: "2018-01-01"
+  dimension_end_date: "2032-12-31"
+  # 1 = January (calendar year), 7 = July, etc.
+  year_start_month: 1
+  # A July-start FY spanning 2025-2026 is "FY2025" to some organizations and "FY2026" to
+  # others. Both are common and neither is inferable — ask at kickoff.
+  # "starting" = named for the calendar year it begins in
+  # "ending"   = named for the calendar year it ends in
+  year_naming: "starting"
+  # Required by business-hours metrics (SLA, first response, resolution).
+  # Not yet implemented — see the TODO in notebook 24.
+  holidays: []
+
+currency:
+  base_iso_code: "USD"
+  # Set true only if the organization genuinely transacts in multiple currencies.
+  # Notebook 21 fails the run if this contradicts the data, because silently mixing
+  # currencies produces wrong numbers that look plausible.
+  multi_currency: false
+
+hierarchy:
+  # Business unit depth. Flattened to this many fixed levels — ask at kickoff rather than
+  # assuming, or a deep hierarchy gets truncated.
+  business_unit_levels: 4
+  # Manager chain depth. Requires systemuser.parentsystemuserid to be maintained; many
+  # customers do not maintain it, which makes manager-based RLS unviable.
+  manager_levels: 4
+
+security:
+  # Supported patterns — see docs/architecture/security-and-rls.md
+  #   open | own_records | own_business_unit | own_business_unit_and_below |
+  #   manager_hierarchy | team_membership
+  # Dataverse record sharing and field-level security are NOT supported. Never promise
+  # Dataverse security parity in Power BI.
+  default_pattern: "own_business_unit_and_below"
+  per_pack:
+    sales: "manager_hierarchy"
+    customer-service: "own_business_unit_and_below"
+  # The SQL endpoint BYPASSES semantic model RLS — whoever has it reads Gold unfiltered.
+  sql_endpoint_audience: "platform_team_only"
+
+snapshots:
+  # Snapshot facts to run. Must match the specs in notebook 30.
+  # These start in SPRINT 1. History cannot be backfilled — a day not captured is lost
+  # permanently. See docs/architecture/snapshot-and-history.md
+  enabled:
+    - fact_opportunity_snapshot
+    - fact_case_snapshot
+  # Fixed UTC time. Inconsistent timing produces jagged trends.
+  schedule_utc: "03:00"
+  # Daily detail retained for this many days, then rolled up to month-end snapshots.
+  # This is the one recurring storage cost the architecture adds — agree it at kickoff.
+  daily_retention_days: 730
+  rollup_beyond_retention: true
+
+refresh:
+  silver_conformance_cron: "0 4 * * *"
+  gold_cron: "0 5 * * *"
+  # Semantic models refresh AFTER Gold completes — orchestrated, not independently
+  # scheduled, to avoid refreshing against a half-built Gold.
+  semantic_model_trigger: "after_gold"
+
+tables:
+  # Assembled from the source-tables.md of each purchased pack, plus the conformance
+  # layer's own requirements. Notebook 10 gates the run on these.
+  #
+  # DRAFT — validate against the live environment. Dataverse schema varies by solution
+  # version and installed apps.
+  required:
+    # conformance layer
+    - businessunit
+    - systemuser
+    - team
+    - transactioncurrency
+    - activitypointer
+    - account
+    - contact
+    # sales pack
+    - lead
+    - opportunity
+    - opportunityproduct
+    - quote
+    - salesorder
+    # customer-service pack
+    - incident
+  optional:
+    - stringmap
+    - optionsetmetadata
+    - globaloptionsetmetadata
+    - product
+    - territory
+    - slakpiinstance
+
+  # Column-level expectations. The most valuable check in notebook 10 — column drift
+  # silently produces wrong numbers rather than obvious errors.
+  columns:
+    opportunity:
+      - opportunityid
+      - statecode
+      - statuscode
+      - estimatedvalue
+      - estimatedvalue_base
+      - estimatedclosedate
+      - ownerid
+    incident:
+      - incidentid
+      - statecode
+      - statuscode
+      - createdon
+      - ownerid
+
+  # Choice columns in reporting scope. Notebook 20 reports any with no labels resolved —
+  # integer status codes in a report are the first thing a customer notices.
+  choice_columns:
+    opportunity:
+      - statecode
+      - statuscode
+      - salesstagecode
+    incident:
+      - statecode
+      - statuscode
+      - prioritycode
+      - casetypecode

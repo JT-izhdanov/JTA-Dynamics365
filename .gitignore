@@ -1,0 +1,72 @@
+# --- Customer configuration and data: NEVER commit -------------------------
+# Only customer.example.yaml (placeholders) belongs in this repository.
+platform/config/*.yaml
+!platform/config/customer.example.yaml
+platform/config/*.yml
+!platform/config/customer.example.yml
+
+# Any engagement-specific or customer-named material
+**/customer/
+**/customers/
+**/engagement/
+**/engagements/
+*-customer.*
+*.customer.*
+
+# --- Secrets ---------------------------------------------------------------
+.env
+.env.*
+*.pfx
+*.key
+*.pem
+*.p12
+secrets.*
+*secret*
+*credential*
+appsettings.*.json
+!appsettings.example.json
+
+# --- Data extracts: no customer data, ever ---------------------------------
+*.csv
+*.tsv
+*.parquet
+*.xlsx
+*.xls
+data/
+extracts/
+exports/
+
+# --- Power BI --------------------------------------------------------------
+# Binary .pbix defeats source control. Commit PBIP/TMDL instead — see packs/README.md
+*.pbix
+*.pbit
+# Power BI / Fabric local caches
+.pbi/
+*.abf
+
+# --- Notebook output ------------------------------------------------------
+# Output can contain customer data. Commit notebooks with output cleared.
+*.ipynb_checkpoints
+.ipynb_checkpoints/
+
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- OS / editor ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- Office temp files ----------------------------------------------------
+~$*

@@ -1,0 +1,265 @@
+# Sales pack — metric definitions
+#
+# THE SOURCE OF TRUTH. The semantic model implements this; it does not define it.
+# If the model and this file disagree, this file is right and the model is a bug.
+#
+# DRAFT — requires business review and offering-owner sign-off before implementation.
+#
+# Field meanings:
+#   currency_basis      base | transaction | n/a
+#                       The rate on a Dataverse record is the rate AT WRITE TIME, not
+#                       today's. Correct for financial reporting, wrong for pipeline
+#                       comparison. Every money metric must declare its basis.
+#   time_basis          Which date column the metric is measured against.
+#   business_hours      true metrics need the holiday calendar, which does NOT exist yet
+#                       (see notebook 24 TODO). Until it does, they are calendar-hours and
+#                       must say so.
+#   snapshot_dependent  true = requires snapshot history, so only available from Sprint 1
+#                       deployment forward and never backfillable.
+
+pack: sales
+version: 0.1.0-draft
+status: draft
+
+metrics:
+
+  # ---------------------------------------------------------------- pipeline
+
+  - name: Open Pipeline Value
+    description: Total estimated value of open opportunities.
+    grain: opportunity
+    calculation: sum of estimatedvalue_base where conformed_status = 'Open'
+    currency_basis: base
+    time_basis: estimatedclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      The headline reconciliation metric — the first number a customer checks against
+      Dynamics. Must tie exactly in Sprint 2 before UAT opens.
+
+  - name: Weighted Pipeline Value
+    description: Open pipeline value weighted by close probability.
+    grain: opportunity
+    calculation: sum of (estimatedvalue_base * closeprobability / 100) where conformed_status = 'Open'
+    currency_basis: base
+    time_basis: estimatedclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      MEANINGLESS if the customer does not maintain closeprobability. Many leave it at
+      stage defaults. Verify during the first build; if unmaintained, remove this metric
+      from the pack for that customer rather than shipping a misleading number.
+
+  - name: Pipeline Value As Of Date
+    description: Open pipeline value as it stood on a chosen past date.
+    grain: opportunity x day
+    calculation: sum of estimatedvalue_base from fact_opportunity_snapshot where snapshot_date = [selected date] and conformed_status = 'Open'
+    currency_basis: base
+    time_basis: snapshot_date
+    business_hours: false
+    snapshot_dependent: true
+    notes: >
+      THE DIFFERENTIATING METRIC OF THE PACK. Not answerable from Dataverse and not
+      offered by any first-party Dynamics 365 analytics. Available only from snapshot
+      deployment forward. Lead the demo with this.
+
+  - name: Pipeline Coverage
+    description: Open pipeline value as a multiple of remaining target.
+    grain: owner or team x period
+    calculation: Open Pipeline Value / remaining target for the period
+    currency_basis: base
+    time_basis: estimatedclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Requires targets, which do NOT live in Dataverse by default. Either the customer
+      supplies them as a file, or this metric is excluded. Do not promise it without
+      confirming a target source.
+
+  # ---------------------------------------------------------------- conversion
+
+  - name: Win Rate
+    description: Share of closed opportunities that were won.
+    grain: opportunity
+    numerator: count of opportunities where conformed_status = 'Won'
+    denominator: count of opportunities where conformed_status in ('Won', 'Lost')
+    currency_basis: n/a
+    time_basis: actualclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Denominator EXCLUDES Cancelled. Some customers treat Cancelled as a form of Lost —
+      confirm at kickoff, because it changes the number materially.
+
+  - name: Win Rate by Value
+    description: Won value as a share of all closed value.
+    grain: opportunity
+    numerator: sum of actualvalue_base where conformed_status = 'Won'
+    denominator: sum of actualvalue_base where conformed_status in ('Won', 'Lost')
+    currency_basis: base
+    time_basis: actualclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: Usually differs substantially from count-based win rate. Show both.
+
+  - name: Lead Conversion Rate
+    description: Share of leads that qualified into an opportunity.
+    grain: lead
+    numerator: count of leads where qualifyingopportunityid is not null
+    denominator: count of leads
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: false
+    snapshot_dependent: false
+
+  - name: Quote to Order Conversion
+    description: Share of quotes that became orders.
+    grain: quote
+    numerator: count of quotes with a related salesorder
+    denominator: count of quotes
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: false
+    snapshot_dependent: false
+
+  # ---------------------------------------------------------------- velocity
+
+  - name: Average Sales Cycle
+    description: Mean days from opportunity creation to close.
+    grain: opportunity
+    calculation: average of datediff(actualclosedate, createdon) where conformed_status in ('Won', 'Lost')
+    currency_basis: n/a
+    time_basis: actualclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Calendar days, not business days. Labelled as such until the holiday calendar
+      exists. Report median alongside mean — sales cycle distributions are heavily skewed
+      and the mean alone misleads.
+
+  - name: Average Time In Stage
+    description: Mean days an opportunity spends in each sales stage.
+    grain: opportunity x stage
+    calculation: derived from consecutive fact_opportunity_snapshot rows where the stage changes
+    currency_basis: n/a
+    time_basis: snapshot_date
+    business_hours: false
+    snapshot_dependent: true
+    notes: >
+      Daily snapshot granularity, so multiple stage changes within one day are not
+      distinguishable. Identifies where deals stall — one of the highest-value questions
+      in the pack, and unanswerable without snapshots.
+
+  - name: Open Deal Age
+    description: Days since creation for open opportunities.
+    grain: opportunity
+    calculation: datediff(today, createdon) where conformed_status = 'Open'
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: false
+    snapshot_dependent: false
+    notes: Present in aging buckets, not as a bare average.
+
+  - name: Stalled Pipeline Value
+    description: Open pipeline value with no activity in the configured threshold.
+    grain: opportunity
+    calculation: sum of estimatedvalue_base where conformed_status = 'Open' and days since last activity > threshold
+    currency_basis: base
+    time_basis: estimatedclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Uses bridge_activity. Threshold is a per-customer parameter, default 30 days —
+      confirm at kickoff.
+
+  # ---------------------------------------------------------------- forecast
+
+  - name: Forecast Slippage
+    description: Open pipeline whose estimated close date moved later since a prior snapshot.
+    grain: opportunity
+    calculation: count and value of opportunities where estimatedclosedate is later than at the comparison snapshot
+    currency_basis: base
+    time_basis: snapshot_date
+    business_hours: false
+    snapshot_dependent: true
+    notes: >
+      Highly valued by sales leadership and completely unavailable from Dataverse. Strong
+      demo metric alongside Pipeline Value As Of Date.
+
+  - name: Forecast Accuracy
+    description: Value actually closed in a period versus the value forecast for it at period start.
+    grain: period
+    numerator: sum of actualvalue_base closed won in the period
+    denominator: sum of estimatedvalue_base from the snapshot at period start for that period
+    currency_basis: base
+    time_basis: actualclosedate
+    business_hours: false
+    snapshot_dependent: true
+    notes: Requires snapshot history covering the period start. Short at go-live.
+
+  # ---------------------------------------------------------------- activity
+
+  - name: Activities Per Opportunity
+    description: Mean count of activities regarding each opportunity.
+    grain: opportunity
+    calculation: count of bridge_activity rows per opportunity, averaged
+    currency_basis: n/a
+    time_basis: activity createdon
+    business_hours: false
+    snapshot_dependent: false
+
+  - name: Days Since Last Activity
+    description: Days since the most recent activity on an open opportunity.
+    grain: opportunity
+    calculation: datediff(today, max activity created_on) where conformed_status = 'Open'
+    currency_basis: n/a
+    time_basis: activity createdon
+    business_hours: false
+    snapshot_dependent: false
+    notes: Feeds Stalled Pipeline Value.
+
+  # ---------------------------------------------------------------- performance
+
+  - name: Closed Won Value
+    description: Total value of opportunities won in the period.
+    grain: opportunity
+    calculation: sum of actualvalue_base where conformed_status = 'Won'
+    currency_basis: base
+    time_basis: actualclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: Second reconciliation metric. Must tie before UAT.
+
+  - name: Average Deal Size
+    description: Mean value of won opportunities.
+    grain: opportunity
+    calculation: Closed Won Value / count of won opportunities
+    currency_basis: base
+    time_basis: actualclosedate
+    business_hours: false
+    snapshot_dependent: false
+
+  - name: Loss Rate By Reason
+    description: Distribution of lost opportunities across loss reasons.
+    grain: opportunity
+    calculation: count of lost opportunities by statuscode label, as a share of all lost
+    currency_basis: n/a
+    time_basis: actualclosedate
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Depends entirely on the customer populating loss reason. Many do not, or do so
+      inconsistently. Check during the first build rather than shipping an empty page.
+
+# ------------------------------------------------------------------ open questions
+#
+# Resolve with the customer during the first build. Each changes a metric definition,
+# so resolve them before implementing the model rather than after.
+open_questions:
+  - Is Cancelled treated as a form of Lost, or genuinely separate? (Win Rate denominator)
+  - Is closeprobability maintained? (Weighted Pipeline Value viability)
+  - Do targets exist anywhere, and in what form? (Pipeline Coverage viability)
+  - Stage from salesstagecode or from business process flow? (all stage metrics)
+  - Is loss reason populated consistently? (Loss Rate By Reason viability)
+  - What is the stalled-pipeline threshold? (default 30 days)
+  - Are opportunity products used, or header value only? (product-level pipeline)

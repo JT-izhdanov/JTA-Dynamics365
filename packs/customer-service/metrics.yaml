@@ -1,0 +1,246 @@
+# Customer Service pack — metric definitions
+#
+# THE SOURCE OF TRUTH. The semantic model implements this; it does not define it.
+# DRAFT — requires business review and offering-owner sign-off.
+#
+# See packs/sales/metrics.yaml for field meanings.
+#
+# BLOCKING NOTE: every metric below marked `business_hours: true` is currently
+# CALENDAR-hours, because dim_date has no holiday/working-day calendar yet (see the TODO
+# in platform/notebooks/24_silver_conformance_date.py). Calendar-hours SLA metrics are
+# wrong in a way customers notice immediately. Resolve before this pack goes GA.
+
+pack: customer-service
+version: 0.1.0-draft
+status: draft
+
+metrics:
+
+  # ---------------------------------------------------------------- volume
+
+  - name: Cases Created
+    description: Count of cases created in the period.
+    grain: case
+    calculation: count of incident
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Headline reconciliation metric — must tie to Dynamics exactly before UAT. Confirm
+      whether child cases (parentcaseid populated) are counted; both answers are
+      defensible, inconsistency is not.
+
+  - name: Cases Resolved
+    description: Count of cases resolved in the period.
+    grain: case
+    calculation: count of incident where conformed_status = 'Resolved'
+    currency_basis: n/a
+    time_basis: resolved date
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      VERIFY which column carries the resolution timestamp — incident.modifiedon is
+      unreliable for this. incidentresolution or a status-change derivation may be needed.
+
+  - name: Open Case Backlog
+    description: Count of cases open as at a point in time.
+    grain: case
+    calculation: count of incident where conformed_status = 'Open'
+    currency_basis: n/a
+    time_basis: n/a (current state)
+    business_hours: false
+    snapshot_dependent: false
+
+  - name: Backlog Over Time
+    description: Open case backlog on each past date.
+    grain: case x day
+    calculation: count from fact_case_snapshot where conformed_status = 'Open', by snapshot_date
+    currency_basis: n/a
+    time_basis: snapshot_date
+    business_hours: false
+    snapshot_dependent: true
+    notes: >
+      A DIFFERENTIATING METRIC. Not answerable from Dataverse. Available only from
+      snapshot deployment forward. Lead the demo with this and Backlog Aging.
+
+  - name: Net Backlog Change
+    description: Cases created minus cases resolved in the period.
+    grain: period
+    calculation: Cases Created - Cases Resolved
+    currency_basis: n/a
+    time_basis: period
+    business_hours: false
+    snapshot_dependent: false
+    notes: The "are we keeping up?" metric. Simple and heavily used.
+
+  # ---------------------------------------------------------------- responsiveness
+
+  - name: First Response Time
+    description: Elapsed time from case creation to first outbound response.
+    grain: case
+    calculation: interval from createdon to first outbound activity or SLA first-response timestamp
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: true
+    snapshot_dependent: false
+    notes: >
+      CURRENTLY CALENDAR-HOURS — see the blocking note at the top of this file.
+      Source depends on whether Dataverse SLAs are configured; if not, derive from
+      bridge_activity and LABEL IT AS DERIVED. Report median alongside mean — the
+      distribution is skewed.
+
+  - name: Resolution Time
+    description: Elapsed time from case creation to resolution.
+    grain: case
+    calculation: interval from createdon to resolution timestamp
+    currency_basis: n/a
+    time_basis: resolved date
+    business_hours: true
+    snapshot_dependent: false
+    notes: CURRENTLY CALENDAR-HOURS. Report median alongside mean.
+
+  - name: SLA Attainment
+    description: Share of cases meeting their SLA target.
+    grain: case
+    numerator: count of cases where SLA status indicates met
+    denominator: count of cases with an SLA applied
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: true
+    snapshot_dependent: false
+    notes: >
+      REQUIRES Dataverse SLAs to be configured. Many customers do not configure them.
+      If absent, either exclude this metric or derive it and label it clearly as derived
+      — never present a derived approximation as SLA attainment.
+
+  - name: Cases Breaching SLA
+    description: Count and share of cases that breached SLA.
+    grain: case
+    calculation: count of cases where SLA status indicates breach
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: true
+    snapshot_dependent: false
+
+  # ---------------------------------------------------------------- backlog quality
+
+  - name: Backlog Aging
+    description: Open cases distributed across age buckets.
+    grain: case
+    calculation: count of open cases by datediff(today, createdon) bucketed
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Default buckets 0-1, 2-7, 8-30, 31-90, 90+ days. Confirm the customer's preferred
+      buckets at kickoff. Present as a distribution, never as a bare average age.
+
+  - name: Aging Over Time
+    description: How the age distribution of the backlog has shifted.
+    grain: case x day
+    calculation: Backlog Aging computed per snapshot_date from fact_case_snapshot
+    currency_basis: n/a
+    time_basis: snapshot_date
+    business_hours: false
+    snapshot_dependent: true
+    notes: >
+      Shows whether the backlog is getting older even when its size is flat — a question
+      no first-party report answers.
+
+  - name: Queue Dwell Time
+    description: Time a case spends in a queue before being picked up.
+    grain: queue item
+    calculation: interval from queue entry to assignment
+    currency_basis: n/a
+    time_basis: queue entry
+    business_hours: true
+    snapshot_dependent: false
+    notes: Requires the customer to use queues. Confirm at kickoff.
+
+  # ---------------------------------------------------------------- quality
+
+  - name: Reopen Rate
+    description: Share of resolved cases that were subsequently reopened.
+    grain: case
+    numerator: count of cases reopened at least once
+    denominator: count of resolved cases
+    currency_basis: n/a
+    time_basis: resolved date
+    business_hours: false
+    snapshot_dependent: true
+    notes: >
+      Identification method must be agreed with the customer — a status reason, a custom
+      field, or inferred from Resolved-to-Active transitions in fact_case_snapshot. The
+      snapshot-derived version is the most reliable but only covers snapshot history.
+
+  - name: Escalation Rate
+    description: Share of cases escalated.
+    grain: case
+    numerator: count of escalated cases
+    denominator: count of cases
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: false
+    snapshot_dependent: false
+    notes: VERIFY how escalation is represented — escalatedon, a status reason, or custom.
+
+  - name: First Contact Resolution
+    description: Share of cases resolved with a single customer interaction.
+    grain: case
+    numerator: count of resolved cases with one customer-facing activity
+    denominator: count of resolved cases
+    currency_basis: n/a
+    time_basis: resolved date
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Uses bridge_activity. Definition varies by organization — agree what counts as an
+      interaction at kickoff.
+
+  # ---------------------------------------------------------------- workload
+
+  - name: Cases Per Agent
+    description: Case load by owner.
+    grain: owner
+    calculation: count of cases by ownerid
+    currency_basis: n/a
+    time_basis: createdon or current state
+    business_hours: false
+    snapshot_dependent: false
+    notes: >
+      Snapshots join the AS-OF owner version, so historical load is attributed to who
+      actually held the case then — not to today's assignee.
+
+  - name: Open Cases Per Agent
+    description: Current open case load by owner.
+    grain: owner
+    calculation: count of open cases by ownerid
+    currency_basis: n/a
+    time_basis: n/a (current state)
+    business_hours: false
+    snapshot_dependent: false
+
+  # ---------------------------------------------------------------- knowledge
+
+  - name: Knowledge Article Usage
+    description: Cases with a knowledge article associated.
+    grain: case
+    calculation: count of cases with a linked knowledgearticle
+    currency_basis: n/a
+    time_basis: createdon
+    business_hours: false
+    snapshot_dependent: false
+    notes: VERIFY the case-to-article linkage table and its availability.
+
+open_questions:
+  - Are Dataverse SLAs configured? (SLA Attainment, Cases Breaching SLA viability)
+  - What are the business hours, and do they vary by region or queue? (all business_hours metrics)
+  - Which column carries the resolution timestamp reliably? (Cases Resolved, Resolution Time)
+  - Do child cases count as cases? (Cases Created)
+  - How is "reopened" identified? (Reopen Rate)
+  - How is escalation represented? (Escalation Rate)
+  - Are queues used? (Queue Dwell Time viability)
+  - Preferred aging buckets? (default 0-1, 2-7, 8-30, 31-90, 90+)
+  - What counts as a customer interaction? (First Contact Resolution)
