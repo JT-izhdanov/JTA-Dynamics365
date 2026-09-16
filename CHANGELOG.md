@@ -12,6 +12,60 @@ offering release, not per commit.
 
 ## [Unreleased]
 
+### Added — Bronze data profiling
+
+- `docs/bronze-profiling/` — per-entity profiles of Dataverse **as Link to Fabric actually
+  exports it**, observed against the live JTP environment. Folder rules, method, and the
+  platform patterns that apply to every entity
+- `docs/bronze-profiling/opportunity.md` — full profile of `opportunity`: **343 columns**
+  as exported, column inventory by role, observed choice integers, ten findings that change
+  the design, eleven data quality issues, the fact column selection, and eleven measures
+  still needing full-table counts
+- `docs/bronze-profiling/samples/` — de-identified sample plus its generator. The generator
+  takes **no real data as input**; it synthesises from the documented profile, so it cannot
+  leak. 12 rows × 343 columns covering multi-practice, won, lost-with-custom-status,
+  OOB-cancelled, co-sell, contact-party, test-data, soft-deleted and pre-cutover shapes
+
+### Platform patterns confirmed (apply to every Dataverse entity)
+
+- Lookups arrive as `<column>` + **`<column>_entitytype`** pairs — **polymorphism is
+  resolved inline**, so no `TargetMetadata` join is needed
+- Lookup labels arrive denormalized as `<column>name` — free labels, but no hierarchy
+- **Choices are raw integers with no labels** — the `OptionsetMetadata` dependency stands
+- `PartitionId` is the `createdon` **year**; `IsDelete` **must be filtered on every Bronze
+  read**; rollup fields ship with `_date` / `_state` staleness twins
+
+### Changed — decisions resolved or narrowed by the profile
+
+- **D4 answered: neither `salesstagecode` nor BPF.** Stage is `jt_sales_stage`;
+  `traversedpath` / `stageid` / `processid` are all NULL, so **BPF stage history does not
+  exist**. Snapshots or audit are the only routes
+- **D8 answered: opportunity products are mandatory.** `isrevenuesystemcalculated` = 1 and
+  `estimatedvalue` = `totallineitemamount` — the lines are the revenue source, not an
+  optional Products page
+- **D1 narrowed** — `statecode = 2` mixes OOB Canceled with JT custom loss reasons;
+  grouping must be at `statuscode` grain
+- **D2 answered yes**, with two fields and an incomparable historic range
+- **D5 answered yes**; **D10 de-risked**; **D6 source changed** to the
+  `jt_lastactivitydate` rollup, because `modifiedon` is polluted by automation
+- **Forecast category is in Dataverse** (`jt_forecastcategory`), so the Forecast page needs
+  no Dynamics change — subject to its fill rate
+- `dim_resource` is now needed by the **Sales** pack: `jt_presalesresource` is a
+  `bookableresource`, not a `systemuser`
+
+### New blocking question
+
+- **D11 — where does Team (AE / SAM / SDR) come from?** It is the primary segment for every
+  report page and it is **not on `opportunity`**: `owningteam` is NULL throughout and there
+  is a single flat business unit. That also means BU-based RLS cannot be validated at JTP
+
+### Largest analytic constraint found
+
+The JT custom analytic schema (`jt_primaryproduct_1`, `jt_backlogtype`, `jt_sales_stage`,
+`jt_forecastcategory`, `jt_interests`) is **NULL on pre-cutover rows**. The table spans
+2010–2026; practice, revenue-type, stage and forecast trends can only reach back to the
+cutover date, which still needs measuring.
+
 ### Added — analysis of the existing Excel pipeline report
 
 - `docs/reference/jtp-excel-pipeline-report.md` — structural analysis of JourneyTeam's

@@ -36,6 +36,14 @@ data/
 extracts/
 exports/
 
+# Narrow exception: DE-IDENTIFIED Bronze samples only.
+# These are SYNTHESISED from a documented profile, not masked exports — the generators
+# take no real data as input. See docs/bronze-profiling/samples/README.md.
+# Nothing else under any samples/ directory is exempt; add files here one at a time,
+# never a wildcard, and never a real export.
+!docs/bronze-profiling/samples/*.sample.tsv
+!docs/bronze-profiling/samples/*.sample.csv
+
 # --- Power BI --------------------------------------------------------------
 # Binary .pbix defeats source control. Commit PBIP/TMDL instead — see packs/README.md
 *.pbix

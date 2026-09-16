@@ -40,6 +40,7 @@ docs/
   decisions/      Architecture decision records (ADRs)
   delivery/       Prerequisites, sprint playbook, UAT, training, support handoff
   reference/      Analysis of existing artifacts that inform the offering
+  bronze-profiling/  Per-entity profiles of Dataverse as Link to Fabric exports it
 platform/
   notebooks/      Fabric notebooks — Bronze validation, Silver conformance, snapshots, Gold
   pipelines/      Fabric pipeline and scheduling definitions
@@ -63,6 +64,7 @@ sales-assets/     Customer-facing deck, one-pagers, demo script
 | Delivering an engagement | [`docs/delivery/playbook.md`](docs/delivery/playbook.md) |
 | Working on the JTP first build | [`docs/delivery/jtp-first-build-plan.md`](docs/delivery/jtp-first-build-plan.md) |
 | Building or extending the IP | [`docs/architecture/reference-architecture.md`](docs/architecture/reference-architecture.md), [`platform/README.md`](platform/README.md) |
+| Mapping a Dataverse entity | [`docs/bronze-profiling/`](docs/bronze-profiling/) — what is **actually** in the export |
 | Building a report pack | [`packs/README.md`](packs/README.md) |
 
 ## Status

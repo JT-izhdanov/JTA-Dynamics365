@@ -1,9 +1,22 @@
 # Sales pack — source tables
 
-> **DRAFT — NOT VALIDATED.** Written from general Dataverse knowledge. Dataverse schema
-> varies by solution version and installed apps, so this contains errors. Correct it from
-> what notebook 10 actually observes during the first build, and commit the corrections —
-> that feedback loop is how this becomes real IP rather than an assumption.
+> **`opportunity` HAS NOW BEEN PROFILED against the live JTP export.** The authoritative
+> mapping for that entity is
+> [`docs/bronze-profiling/opportunity.md`](../../docs/bronze-profiling/opportunity.md) —
+> 343 columns as exported, observed choice values, and eleven data quality issues. **It
+> supersedes the `opportunity` section below**, which was written from general knowledge
+> and is wrong in several places (see that profile's §5).
+>
+> The most consequential corrections: practice lives on `jt_primaryproduct_1` plus a
+> semicolon-delimited `jt_interests` multi-select; stage lives on `jt_sales_stage` with
+> **no BPF history available**; `opportunityproduct` is the **revenue source**, not
+> optional; there is **one flat business unit and no owning team**; and the custom
+> analytic schema is **NULL for most of the table's history**.
+>
+> **DRAFT — NOT VALIDATED** for every other entity here. Written from general Dataverse
+> knowledge, which varies by solution version and installed apps, so it contains errors.
+> Profile each entity before building against it, and commit the corrections — that
+> feedback loop is how this becomes real IP rather than an assumption.
 >
 > Items marked `VERIFY` are explicitly unconfirmed.
 

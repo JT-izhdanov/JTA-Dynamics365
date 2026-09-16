@@ -923,31 +923,41 @@ Report but do not fail — these are scoping findings for the project lead:
 
 ## 14. Open decisions
 
-| ID | Decision | Blocks | Default if unanswered |
+> **Several of these are now answered by the Bronze profile.**
+> [`docs/bronze-profiling/opportunity.md`](../../docs/bronze-profiling/opportunity.md)
+> records what the live JTP export actually contains. The **Status** column below reflects
+> it. The profile also raises **one new blocking question** (D11).
+
+| ID | Decision | Blocks | Status / default |
 |---|---|---|---|
-| **D1** | Is `Cancelled` a form of `Lost`? | Win Rate, Loss Rate | Separate; excluded from Win Rate |
-| **D2** | Is `closeprobability` maintained? | Weighted Pipeline Value | Remove the measure |
-| **D3** | Do sales targets exist, and where? | Pipeline Coverage | Remove the measure |
-| **D4** | Stage from `salesstagecode` or BPF? | All stage metrics, `fact_stage_duration` | **Must be answered** — no safe default |
-| **D5** | Is loss reason populated consistently? | Loss Rate By Reason, Win/Loss page | Remove the visuals |
-| **D6** | Stalled-pipeline threshold? | Stalled Pipeline Value | 30 days |
-| **D7** | Direct Lake or Import? | Model build, Gold design | Direct Lake, pending the Sprint 1 spike |
-| **D8** | Are opportunity products used? | Products page, line fact | Omit the page |
+| **D1** | Is `Cancelled` a form of `Lost`? | Win Rate, Loss Rate | **Narrowed.** `statecode = 2` mixes OOB `statuscode = 4` (Canceled) with JT custom loss reasons. Answerable by enumerating `statuscode` with labels; grouping must be at `statuscode` grain |
+| **D2** | Is `closeprobability` maintained? | Weighted Pipeline Value | **Yes.** But two fields — use `COALESCE(jt_close_probability, closeprobability)` — and the historic range differs from the modern 3-band, so weighted pipeline is not comparable across the cutover |
+| **D3** | Do sales targets exist, and where? | Pipeline Coverage | Yes, in a spreadsheet, not Dataverse. Ingest as a source |
+| **D4** | Stage from `salesstagecode` or BPF? | All stage metrics, `fact_stage_duration` | **ANSWERED: neither.** `jt_sales_stage` (custom). `salesstagecode` = `1` always; `stageid` / `processid` / `traversedpath` all NULL, so **BPF history is unavailable** |
+| **D5** | Is loss reason populated consistently? | Loss Rate By Reason, Win/Loss page | **Yes**, as custom `statuscode` values |
+| **D6** | Stalled-pipeline threshold? | Stalled Pipeline Value | 30 days. **Source changed** — use the `jt_lastactivitydate` rollup, not `modifiedon` (automation-polluted) and not `bridge_activity` |
+| **D7** | Direct Lake or Import? | Model build, Gold design | Direct Lake, pending the Sprint 1 spike. Long-text max lengths must be measured against the 32,764-character limit |
+| **D8** | Are opportunity products used? | Products page, line fact | **ANSWERED: mandatory.** `isrevenuesystemcalculated` = 1 and `estimatedvalue` = `totallineitemamount` — lines are the revenue source, not an optional page |
 | **D9** | Publish all `dim_owner` versions in Gold? (§5.2) | Snapshot ownership across **all** packs | **Yes** — needs platform review |
-| **D10** | Contact-owned opportunity share, and does it need a party dimension? (§4.6) | `dim_customer` shape across all packs | Dual-key, account-only reporting; escalate if material |
+| **D10** | Contact-owned opportunity share, and does it need a party dimension? (§4.6) | `dim_customer` shape across all packs | **Low risk** — `customerid_entitytype` was `account` on every profiled row. Confirm with a full-table count. Polymorphism is resolved inline by `_entitytype`, so no `TargetMetadata` join is needed |
+| **D11** | **Where does Team (AE / SAM / SDR) come from?** | **The primary report segment**, and the whole pack's page layout | **NEW, BLOCKING.** Not on `opportunity`. `owningteam` is NULL throughout and there is one flat business unit. Probably `systemuser` or `teammembership` |
 
-**D4, D9, and D10 are the consequential ones.**
+**D11 and D9 are now the consequential ones.**
 
-- **D4** has no safe default. Building stage analytics on `salesstagecode` when the customer
-  drives stage through a business process flow produces numbers that are wrong and look
-  plausible.
+- **D11** is blocking and has no default. AE / SAM / SDR is how the business segments every
+  report, and the Bronze profile establishes it is not on `opportunity`. Until it is
+  sourced, the Weekly Scorecard, Leaderboard and Performance pages have no segment.
 - **D9** changes a platform notebook and affects every pack's snapshot ownership, so it
   cannot be decided inside this pack.
-- **D10** could change a conformed dimension, which would need an ADR.
 
-D1–D8 map to the open questions already recorded in
-[`metrics.yaml`](metrics.yaml) and [`README.md`](README.md); D9 and D10 are new findings
-from this design pass.
+**D4 and D8 are resolved, and both changed the build:** stage history now has no source
+other than daily snapshots or audit, and opportunity products moved from optional to
+load-bearing. Check whether auditing is enabled on `jt_sales_stage` — it is the only route
+to backfilled velocity analytics.
+
+D1–D8 map to the open questions in [`metrics.yaml`](metrics.yaml) and
+[`README.md`](README.md); D9 and D10 came from the design pass; D11 came from
+[Bronze profiling](../../docs/bronze-profiling/opportunity.md).
 
 ---
 
