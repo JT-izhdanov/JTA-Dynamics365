@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "fabric": {
+      "command": "npx",
+      "args": ["-y", "@microsoft/fabric-mcp"]
+    }
+  }
+}

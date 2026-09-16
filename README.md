@@ -67,6 +67,39 @@ sales-assets/     Customer-facing deck, one-pagers, demo script
 | Mapping a Dataverse entity | [`docs/bronze-profiling/`](docs/bronze-profiling/) — what is **actually** in the export |
 | Building a report pack | [`packs/README.md`](packs/README.md) |
 
+## Working against Fabric
+
+`.mcp.json` registers Microsoft's Fabric MCP server for this repository, so a **local**
+Claude Code session opened here has both the repo and Fabric in one place — which the
+hosted/web sessions cannot, because their egress policy blocks the Fabric endpoints.
+
+```bash
+git clone https://github.com/JT-izhdanov/JTA-Dynamics365 && cd JTA-Dynamics365
+az login --tenant <tenant-id>     # or: az login --service-principal -u <appId> -p "$SECRET" --tenant <tenant-id>
+claude
+```
+
+Requires Node.js and the Azure CLI. The MCP server uses the Azure identity chain, so
+whatever `az` is signed in as is what it acts as.
+
+Two things to know:
+
+- **`DefaultAzureCredential` reads environment variables before the Azure CLI.** A stale
+  `AZURE_CLIENT_ID` / `AZURE_TENANT_ID` / `AZURE_CLIENT_SECRET` in your shell silently wins
+  over your `az login`. Check with `env | grep -i AZURE` if the server authenticates as
+  something unexpected.
+- **Prefer a service principal over a personal sign-in** for anything touching a
+  production workspace — a personal token is tenant-wide, carries your full permission set
+  into every workspace you can reach, and attributes every agent action to you in the audit
+  log. See [`docs/delivery/jtp-first-build-plan.md`](docs/delivery/jtp-first-build-plan.md)
+  for the setup and its change-control route.
+
+**On Windows, skip `az … --query`.** PowerShell mangles JMESPath strings containing `?`,
+`|`, `[]` and quotes. Pipe to `ConvertFrom-Json` and filter in PowerShell instead.
+
+Workspace and capacity IDs are **not** recorded in this repository — see `CLAUDE.md`. Pass
+them per session.
+
 ## Status
 
 The offering is in **definition and initial build**. Nothing in `platform/` or `packs/` has
