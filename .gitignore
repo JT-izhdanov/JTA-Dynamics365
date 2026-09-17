@@ -13,6 +13,12 @@ platform/config/*.yml
 *-customer.*
 *.customer.*
 
+# --- Environment identifiers -----------------------------------------------
+# Workspace / lakehouse / capacity IDs and deep links stay out of version control.
+# Committed template: docs/architecture/fabric-workspaces.local.example.md
+*.local.md
+!*.local.example.md
+
 # --- Secrets ---------------------------------------------------------------
 .env
 .env.*
