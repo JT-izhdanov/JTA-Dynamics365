@@ -14,9 +14,10 @@ offering release, not per commit.
 
 ### Changed — repository narrowed to Dynamics 365 Sales only
 
-**Scope decision: this repository covers the Sales pack and nothing else.** The offering was
-defined around four Customer Engagement report packs plus a cross-app pack; the other four
-are deferred.
+**Scope decision: this repository is the working space for the Sales pack.** The offering
+was defined around four Customer Engagement report packs plus a cross-app pack. The other
+four are **deferred, not cancelled** — cross-app functionality is intended and will be
+built; it needs a second pack before it has anything to span.
 
 - **Removed** `packs/customer-service/`, `packs/project-operations/`, `packs/field-service/`
   and `packs/revenue-to-delivery/` — 11 files, 67 metric definitions and four source-table
@@ -58,6 +59,10 @@ are deferred.
   narrower. `positioning.md` and the deck outline lead with history and custom fields, and
   deliberately do **not** carry cross-app as a roadmap item: a differentiator that cannot
   be demoed costs more credibility than one never raised
+- **Timeline inconsistency flagged, not silently resolved.** The playbook is three sprints
+  over six weeks; the offering now quotes 4–5 weeks. The saving is entirely in Sprint 2
+  (one pack, not two to four), so Sprint 2 is marked as one week pending a real number from
+  the first delivery
 
 ### Kept general on purpose, so cross-app stays cheap to add
 
@@ -74,11 +79,7 @@ carries generality one pack does not need:
 
 `roadmap.md` now carries this as a table with the reason and the file for each, plus the
 cheapest route back: a delivery-side pack, since Revenue-to-Delivery has nothing to span on
-its own. ADR 0003 is the first question to answer on that route
-- **Timeline inconsistency flagged, not silently resolved.** The playbook is three sprints
-  over six weeks; the offering now quotes 4–5 weeks. The saving is entirely in Sprint 2
-  (one pack, not two to four), so Sprint 2 is marked as one week pending a real number from
-  the first delivery
+its own. ADR 0003 is the first question to answer on that route.
 
 ### Added — Bronze data profiling
 
