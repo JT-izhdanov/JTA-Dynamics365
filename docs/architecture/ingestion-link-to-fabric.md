@@ -1,6 +1,8 @@
 # Ingestion — Link to Microsoft Fabric
 
-Component 1 of the customer-facing architecture narrative.
+Component 1 of the customer-facing architecture narrative. Its place in the end-to-end
+design, and the contract it owes Silver, are in
+[`solution-technical-design.md`](solution-technical-design.md#4-component-1--ingestion).
 
 ## What it is
 
@@ -13,7 +15,7 @@ For this offering, that means **the entire ingestion layer is a configuration st
 
 ## Why this matters to the offering
 
-| | Business Central edition | CE edition |
+| | Business Central edition | This offering |
 |---|---|---|
 | Ingestion mechanism | Custom BC2Fabric AL extension | Link to Fabric |
 | Who builds it | JourneyTeam | Microsoft |
@@ -23,8 +25,9 @@ For this offering, that means **the entire ingestion layer is a configuration st
 
 Two consequences shape the whole offering:
 
-1. **Delivery is cheaper and faster** — the 6-week timeline versus 8 for BC comes largely
-   from here.
+1. **Delivery is cheaper and faster** — the timeline advantage over the Business Central
+   edition's eight weeks comes largely from here. See
+   [`../offering/pricing-and-packaging.md`](../offering/pricing-and-packaging.md).
 2. **Ingestion is not defensible IP.** Any partner, and any reasonably capable customer IT
    team, can do this step. Never build the pitch around it. The value narrative has to move
    immediately to the [conformance layer](conformance-layer.md) and
@@ -78,13 +81,15 @@ The shortcut *is* Bronze. Treat it as read-only, Microsoft-managed territory:
    by which apps are installed — this is what
    `platform/notebooks/10_bronze_shortcut_validation.py` exists to catch, before a mapping
    error surfaces as a wrong number in UAT.
-4. **Table selection is configuration.** Which tables are linked is driven by the packs
-   sold, recorded in `platform/config/`, not chosen ad hoc during delivery.
+4. **Table selection is configuration.** Which tables are linked is recorded in
+   `platform/config/`, not chosen ad hoc during delivery. Where Bronze is shared
+   infrastructure, adding a table affects other consumers and is change-controlled — see
+   [`jt-medallion-topology.md`](jt-medallion-topology.md).
 
 ## What is out of scope here
 
 - **Dynamics 365 Finance & Operations** does not ingest through Dataverse Link to Fabric in
-  the same way and is a separate edition, not a pack. This is directly relevant to Project
-  Operations — see [ADR 0003](../decisions/0003-project-operations-scope.md).
+  the same way and is a separate edition, not a pack. This matters for any future
+  delivery-side pack — see [ADR 0003](../decisions/0003-project-operations-scope.md).
 - **Non-Dataverse sources** (on-prem, file, streaming) land in OneLake through normal
   Fabric mechanisms and are additional development, not part of any fixed price.

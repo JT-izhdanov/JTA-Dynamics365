@@ -12,6 +12,70 @@ offering release, not per commit.
 
 ## [Unreleased]
 
+### Added — end-to-end solution technical design
+
+- `docs/architecture/solution-technical-design.md` — the implementable design for the whole
+  Fabric solution across all five components: **ingestion** (Link to Fabric, the table set,
+  the validation gate and who owns each failure mode), **transformation** (the medallion,
+  the seven conformance problems, snapshot history, and the topology divergence),
+  **semantic model** (one certified model, Direct Lake, and what the model owes its
+  consumers), **Power BI** (distribution surfaces and the SQL endpoint as a security
+  decision), and **Data Agent**
+- **Layer contracts** — what each layer guarantees the next, what it is forbidden, and what
+  enforces it. The heaviest is Gold → model: every derived value materialised in Gold is
+  what lets reports, Excel and an agent return the same number, and Direct Lake's lack of
+  calculated columns enforces it
+- Fabric artifact inventory (13 items), end-to-end identity table, two-pipeline
+  orchestration, environments and ALM, monitoring signals, cost drivers, an acceptance
+  table with the gate for each layer, eight solution decisions **S1–S8**, and a 14-step
+  build sequence
+- Cross-referenced from README, `reference-architecture.md`, `ingestion-link-to-fabric.md`
+  and the pack TDD. Nothing is restated — Sales specifics stay in
+  `packs/sales/technical-design.md`, metric semantics in `metrics.yaml`, prices in
+  `pricing-and-packaging.md`
+
+### Added — Data Agent design (new capability, not yet in the offering)
+
+A Fabric Data Agent over the certified semantic model, designed as component 5. **Nothing
+is built, and the capability itself carries `VERIFY` markers** on availability, preview or
+GA status, supported data sources, region, SKU requirements and consumption surfaces.
+
+- **S5 — grounding source is the consequential choice.** Recommendation: ground on the
+  **semantic model, not the lakehouse**, for two load-bearing reasons. A lakehouse-grounded
+  agent inherits the SQL endpoint's unfiltered read, and *instructions are not a security
+  boundary*; and an agent computing its own "win rate" from raw columns breaks
+  `metrics.yaml` as the single source of truth in the most damaging way — plausibly, with
+  no error. **If model RLS is not honored under the consuming user's identity, the agent
+  does not ship to a sales audience** (assumption A6)
+- **The snapshot trap, documented explicitly.** `fact_opportunity_snapshot` is one row per
+  opportunity per day, so summing pipeline value without fixing a single `snapshot_date`
+  multiplies the answer by the number of days — roughly 365× over a year of history, and it
+  looks plausible. Four mitigations in reliability order, starting with putting the as-of
+  filter inside a measure rather than leaving the agent to construct it
+- **Model metadata becomes the interface, not hygiene.** Hidden keys and non-additive
+  columns, measure-only aggregation, a description on every visible field, and synonyms for
+  JourneyTeam's vocabulary — practice, backlog type, AE/SAM/SDR, co-sell — none of which
+  are Dataverse column names
+- **AI instructions and few-shot examples specified**, including refusal behavior: when the
+  model cannot answer, say so and name what is missing. Do not approximate. A wrong number
+  delivered fluently is the worst output this solution can produce and the one an agent is
+  most inclined toward
+- **Evaluation is an acceptance gate.** A versioned golden question set of 30–50 questions,
+  re-run on every model or instruction release, scored as correct / wrong / refused —
+  **wrong is far worse than refused**, so a single accuracy score is not the criterion
+- **Cost has a different shape from everything else here.** Every other component costs
+  what it costs regardless of use; an agent scales with questions asked
+
+### Commercial decision this raises — S6
+
+The Data Agent is **not in the packaged offering as priced.** Three options: in the fixed
+price as component 5, a priced add-on, or internal-only on the JTP build first.
+**Recommendation: internal first** — JTP is where to find out whether an agent over this
+model is genuinely useful or merely demonstrable, and the answer decides between the other
+two. **Until S6 is decided the agent stays out of every customer-facing deck, proposal and
+statement of work, including as a roadmap item.** The reference architecture's four-component
+narrative is flagged as now having a designed fifth.
+
 ### Changed — repository narrowed to Dynamics 365 Sales only
 
 **Scope decision: this repository is the working space for the Sales pack.** The offering

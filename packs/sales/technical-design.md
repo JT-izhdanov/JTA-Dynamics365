@@ -1,8 +1,9 @@
 # Sales pack — technical design document
 
-**Scope:** Dynamics 365 Sales report pack only. Platform-wide design (ingestion, medallion
-layout, conformance rules) is in [`docs/architecture/`](../../docs/architecture/) and is not
-restated here.
+**Scope:** Dynamics 365 Sales report pack only. Platform-wide design — ingestion, medallion
+layout, conformance rules, the Data Agent, orchestration, ALM and acceptance — is in
+[`docs/architecture/solution-technical-design.md`](../../docs/architecture/solution-technical-design.md)
+and is not restated here.
 
 **Audience:** the data engineer and BI developer building this pack, and the reviewer
 approving it.

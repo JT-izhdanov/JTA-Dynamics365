@@ -1,5 +1,10 @@
 # Reference architecture
 
+The layer model and design principles. **The implementable end-to-end design — component
+by component, with the contracts between them, the Data Agent, orchestration, ALM and
+acceptance — is [`solution-technical-design.md`](solution-technical-design.md).** This page
+is the shape; that one is the build.
+
 ## Layers
 
 ```
@@ -53,6 +58,13 @@ The customer-facing deck walks these in order. They map to this repository as fo
 | 2 | **Medallion data architecture** — Bronze / Silver / Gold | [`medallion-design.md`](medallion-design.md), [`conformance-layer.md`](conformance-layer.md) |
 | 3 | **Power BI semantic model layer** — conformed, certified model | `packs/sales/model/` |
 | 4 | **Power BI report layer** — the pre-built report pack | `packs/sales/reports/` |
+
+**A fifth component is designed but not in the narrative.** A **Fabric Data Agent** over
+the certified semantic model is specified in
+[`solution-technical-design.md`](solution-technical-design.md#8-component-5--data-agent).
+Whether it joins the offering, becomes an add-on, or stays internal is **DECISION S6** and
+belongs to the offering owner — until it is answered, the agent stays out of customer-facing
+material, including as a roadmap item.
 
 Note the difference from the Business Central edition, where component 1 is a custom AL
 extension that JourneyTeam builds and maintains. Here it is a first-party feature. That

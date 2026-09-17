@@ -1,6 +1,10 @@
 # Sales pack
 
-**$5,000** · Dynamics 365 Sales · **Status: in build** (first in the build sequence)
+Dynamics 365 Sales · **Status: in build** — the only pack in this repository.
+
+Price and package contents: [`../../docs/offering/pricing-and-packaging.md`](../../docs/offering/pricing-and-packaging.md).
+Not restated here — and currently **unresolved**, since the tier structure priced by pack
+count no longer applies.
 
 ## What it covers
 

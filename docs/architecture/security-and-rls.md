@@ -15,7 +15,9 @@ buy and how long delivery takes.
 
 ## What the platform fee includes
 
-The $7,500 platform fee includes an **RLS scaffold**:
+The platform fee (see
+[`../offering/pricing-and-packaging.md`](../offering/pricing-and-packaging.md)) includes an
+**RLS scaffold**:
 
 - `dim_owner` built with the business unit path and manager hierarchy resolved (a
   by-product of the [conformance layer](conformance-layer.md#5-ownership-hierarchy))
