@@ -1,85 +1,92 @@
 # Offering overview
 
-**JourneyTeam Analytics for Dynamics 365 Customer Engagement**
+**JourneyTeam Analytics for Dynamics 365 Sales**
+
+> **Repository scope: Sales only.** The Customer Engagement offering as a whole was
+> designed around four report packs. This repository covers **Sales**; the others are
+> deferred and not documented here. See [`roadmap.md`](roadmap.md).
 
 ## Executive summary
 
 | | |
 |---|---|
-| **Offer** | JourneyTeam Analytics for Dynamics 365 Customer Engagement |
-| **Description** | Packaged Microsoft Fabric and Power BI solution for Dynamics 365 CE — Dataverse shortcut into OneLake, medallion data layer, pre-built multi-dimensional semantic models, and ready-to-use report packs |
-| **Target market** | New and existing Dynamics 365 CE customers running Sales, Customer Service, Project Operations, or Field Service |
-| **Entry price** | $15,000 fixed (BASE package) |
-| **Delivery** | 6 weeks, three sprints |
+| **Offer** | JourneyTeam Analytics for Dynamics 365 Sales |
+| **Description** | Packaged Microsoft Fabric and Power BI solution for Dynamics 365 Sales — Dataverse shortcut into OneLake, medallion data layer, pre-built semantic model, and a ready-to-use report pack |
+| **Target market** | New and existing Dynamics 365 Sales customers |
+| **Price** | **Open** — see [`pricing-and-packaging.md`](pricing-and-packaging.md) |
+| **Delivery** | 4–5 weeks |
 
 ## High-level goals
 
-- Offer a low-cost, high-impact data and analytics architecture to Dynamics 365 CE customers.
-- Drive Fabric and Power BI adoption by removing the technical barriers to a self-service BI
-  experience.
-- Align customers to the Microsoft data and analytics roadmap and vision.
-- Create a repeatable, high-margin delivery motion for JourneyTeam rather than bespoke
-  project work.
-- Establish the Fabric platform as the landing zone for *every* Dynamics app a customer
-  runs, making the second and third engagement easier to sell than the first.
+- Offer a low-cost, high-impact data and analytics architecture to Dynamics 365 Sales
+  customers.
+- Drive Fabric and Power BI adoption by removing the technical barriers to a self-service
+  BI experience.
+- Align customers to the Microsoft data and analytics roadmap.
+- Create a repeatable, high-margin delivery motion rather than bespoke project work.
+- Establish the Fabric platform as a landing zone that later Dynamics apps can be added to
+  without rebuilding.
 
 ## What the customer gets
 
-1. **Link to Microsoft Fabric configured** — Dataverse data in OneLake, near-real-time, zero copy.
+1. **Link to Microsoft Fabric configured** — Dataverse data in OneLake, near-real-time,
+   zero copy.
 2. **A medallion data platform** — Bronze raw shortcut, Silver conformance and history,
    Gold business-ready models.
-3. **The Dataverse conformance layer** — choice labels resolved, currency normalized,
+3. **The Dataverse conformance layer** — choice labels resolved, currency normalised,
    ownership hierarchy flattened, dates conformed, RLS scaffolded.
-4. **Snapshot history** — point-in-time pipeline, case aging, and backlog trend that
-   Dataverse itself cannot provide.
-5. **Pre-built Power BI semantic models and report packs** for the apps they selected.
+4. **Snapshot history** — point-in-time pipeline and forecast movement that Dataverse
+   itself cannot provide.
+5. **A pre-built Power BI semantic model and report pack** for Sales.
 6. **A SQL endpoint and Excel connectivity** for self-service analysis.
 7. **Coaching and Copilot enablement** so the platform is actually used.
 
-## The four report packs
+## The Sales pack
 
-| Pack | Dynamics 365 app | Headline metrics |
-|---|---|---|
-| **Sales** | Sales | Pipeline by stage as-of-date, win rate, sales cycle, velocity, forecast vs. actual |
-| **Customer Service** | Customer Service | First-response and resolution time, SLA attainment, backlog aging, reopen rate, agent load |
-| **Project Operations** | Project Operations | Estimate vs. actual, margin by project, utilization vs. target, WIP, unbilled revenue |
-| **Field Service** | Field Service | First-time fix rate, travel vs. wrench time, technician utilization, SLA adherence, PM compliance |
-| **Revenue-to-Delivery** | cross-app | Opportunity → contract → project → work order → realized margin, end to end |
+| Area | Questions answered |
+|---|---|
+| Pipeline | What is in the pipeline, by stage, owner, territory, product? **What did it look like on any past date?** |
+| Conversion | Win rate, loss reasons, lead-to-opportunity conversion |
+| Velocity | Sales cycle length, time in stage, where deals stall |
+| Forecast | Forecast vs. actual, slippage, coverage against target |
+| Activity | Touches per opportunity, activity-to-outcome correlation |
+| Performance | Attainment by owner, team, business unit, territory |
 
-Full metric definitions live in `packs/<pack>/metrics.yaml`.
+Full metric definitions: [`../../packs/sales/metrics.yaml`](../../packs/sales/metrics.yaml).
 
 ## Why this is defensible
 
-Ingestion is first-party and free, so ingestion cannot be the differentiator. The offering
-is defensible on three things Microsoft's own analytics do not do:
+Ingestion is first-party and free, so it cannot be the differentiator. The offering is
+defensible on two things Microsoft's own analytics do not do:
 
 1. **The conformance layer.** Dataverse is hostile to BI in consistent, repeatable ways.
    Solving that once as versioned IP is the product. See
    [`../architecture/conformance-layer.md`](../architecture/conformance-layer.md).
 2. **History.** Dataverse is a current-state store. Nothing first-party gives point-in-time
-   pipeline or case aging. See [`../architecture/snapshot-and-history.md`](../architecture/snapshot-and-history.md).
-3. **Cross-app.** The four apps share Dataverse, so a revenue-to-delivery model is
-   architecturally cheap for us and does not exist in any first-party app.
+   pipeline or forecast movement. See
+   [`../architecture/snapshot-and-history.md`](../architecture/snapshot-and-history.md).
+
+A third differentiator — cross-app models spanning several Dynamics apps — was central to
+the original four-pack design and is **out of scope here**. It returns if and when a second
+pack does.
 
 ## Relationship to the Business Central offering
 
-| | Business Central edition | Customer Engagement edition |
+| | Business Central edition | This offering |
 |---|---|---|
 | Ingestion | Custom BC2Fabric AL extension (JT-built, JT-maintained) | Link to Fabric (first-party, zero-copy) |
 | Bronze layer | Real work — table selection, delta scheduling | Near-free — shortcut lands raw tables |
 | Primary effort | Extension plus medallion | Silver conformance layer |
 | Ingestion upgrade risk | JourneyTeam owns the lifecycle | Microsoft owns the lifecycle |
 | Time to first data | Days | Hours |
-| Delivery timeline | 8 weeks | 6 weeks |
 
-Both editions land in the same OneLake. For a customer running BC and CE, the combined
-platform is a materially larger deal than either package sold alone, and the second
-edition carries far less setup cost.
+Both land in the same OneLake, so a customer running both gets one platform rather than
+two — and the second engagement carries far less setup cost.
 
 ## Open decisions
 
 Tracked as ADRs in [`../decisions/`](../decisions/):
 
 - [0002](../decisions/0002-offering-naming.md) — portfolio naming across editions
-- [0003](../decisions/0003-project-operations-scope.md) — Project Operations deployment scope
-- [0004](../decisions/0004-cross-app-pack-packaging.md) — whether Revenue-to-Delivery is add-on or PREMIUM-only
+- **Pricing** — the package structure depended on choosing among four packs and no longer
+  works. See [`pricing-and-packaging.md`](pricing-and-packaging.md)

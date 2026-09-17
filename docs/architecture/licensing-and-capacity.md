@@ -16,7 +16,7 @@ Microsoft:
 |---|---|---|
 | Microsoft Fabric capacity (F SKU) | Customer | Required for production. Sized per customer |
 | Power BI licensing | Customer | Requirement depends on the Fabric SKU — see below |
-| Dynamics 365 CE licensing | Customer | Already owned; prerequisite, not a new purchase |
+| Dynamics 365 Sales licensing | Customer | Already owned; prerequisite, not a new purchase |
 | OneLake storage | Customer | Consumption-based, and the line item snapshots affect |
 
 Surface these early. Services and licensing usually come from different budgets, and a
@@ -28,7 +28,7 @@ licensing surprise late in the cycle stalls an otherwise-closed deal.
 |---|---|---|
 | 1 | Current F SKU list prices, and pay-as-you-go vs. reservation pricing and the reservation discount | The customer's largest recurring cost; drives the whole TCO conversation |
 | 2 | **The F SKU threshold at which Power BI Pro licenses are no longer required per viewer** | Materially changes total cost. Historically F64; confirm the current threshold and exactly which rights it confers |
-| 3 | Copilot availability by SKU | Coaching in every tier includes Copilot enablement — confirm the customer's SKU actually supports it before promising it |
+| 3 | Copilot availability by SKU | Coaching includes Copilot enablement — confirm the customer's SKU actually supports it before promising it |
 | 4 | OneLake storage, cache, and BCDR storage rates | Needed to size the snapshot cost conversation |
 | 5 | Dataverse capacity implications of Link to Fabric | Microsoft positions the shortcut as not duplicating storage. Confirm current terms before making any cost claim |
 | 6 | Region availability and alignment requirements for Link to Fabric | A hard blocker if misaligned — see [`ingestion-link-to-fabric.md`](ingestion-link-to-fabric.md) |

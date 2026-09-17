@@ -16,20 +16,21 @@ layout, naming, and orchestration.
 
 One lakehouse, `jta_lakehouse`, with three schemas:
 
+> **JourneyTeam's own deployment does not match this** — it uses three lakehouses across
+> two workspaces. See [`jt-medallion-topology.md`](jt-medallion-topology.md); which shape
+> the product ships is an open decision.
+
 ```
 jta_lakehouse
 ├── bronze/     (shortcut — read-only, Dataverse logical names preserved)
-│     account, contact, lead, opportunity, incident, msdyn_workorder, ...
+│     account, contact, lead, opportunity, opportunityproduct, systemuser, ...
 ├── silver/
 │     dim_date, dim_customer, dim_owner, dim_currency, ...
 │     lkp_choice_label, bridge_activity
-│     fact_opportunity_snapshot, fact_case_snapshot, ...
+│     fact_opportunity_snapshot, fact_opportunity_stage_transition, ...
 └── gold/
-      sales__fact_opportunity, sales__dim_customer, ...
-      cs__fact_case, ...
-      po__fact_actual, ...
-      fs__fact_workorder, ...
-      r2d__fact_revenue_to_delivery, ...
+      sales__fact_opportunity, sales__fact_opportunity_snapshot, ...
+      sales__dim_customer, sales__dim_owner, ...
 ```
 
 Conventions:
@@ -37,13 +38,13 @@ Conventions:
 - **Bronze keeps Dataverse logical names unchanged.** They are Microsoft's, not ours, and
   the shortcut defines them.
 - **Silver is prefixed by role:** `dim_`, `fact_`, `lkp_`, `bridge_`.
-- **Gold is prefixed by pack:** `sales__`, `cs__`, `po__`, `fs__`, `r2d__`. Double
-  underscore separates pack from object so the object name keeps its own `dim_`/`fact_`
-  reading.
+- **Gold is prefixed by pack:** `sales__` today. Double underscore separates pack from
+  object so the object name keeps its own `dim_`/`fact_` reading. The prefix is kept with
+  one pack so a second one lands without renaming anything.
 - **Conformed dimensions are shared, not copied.** A Gold pack schema exposes a *view* over
-  the Silver conformed dimension where it needs one. It does not duplicate it. This is the
-  rule that makes cross-app models possible, and the one most likely to be broken under
-  delivery pressure.
+  the Silver conformed dimension where it needs one. It does not duplicate it. This is
+  what keeps the conformance layer reusable IP, and it is the rule most likely to be broken
+  under delivery pressure.
 - Columns are `snake_case`. Dataverse GUID keys are retained and suffixed `_guid`;
   surrogate keys are suffixed `_key`.
 
@@ -60,7 +61,8 @@ Notebooks are numbered by stage and run in that order:
 | 23 | `23_silver_conformance_activities` | `bridge_activity` — resolve polymorphic `regardingobjectid` |
 | 30 | `30_silver_snapshot_facts` | Append daily snapshot rows |
 | 40 | `40_gold_conformed_dimensions` | Publish conformed dimensions into Gold |
-| 5x | *(per pack, future)* | Pack-specific Silver and Gold builds |
+| 5x | *(not yet written)* | Remaining conformed dimensions — `dim_customer`, `dim_contact`, `dim_product`, `dim_territory`, `dim_resource` |
+| 6x | *(not yet written)* | Sales Silver and Gold builds |
 
 Rules:
 

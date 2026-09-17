@@ -1,6 +1,12 @@
 # 0004 — Revenue-to-Delivery pack packaging
 
-**Status:** Proposed
+**Status:** **Deferred** — the cross-app pack is out of scope for this repository
+
+> **Deferred with the pack, 2026-09-17.** The repository was narrowed to Dynamics 365 Sales
+> only, so this decision is not live. The body below is unedited — it holds reasoning worth
+> keeping if the pack returns. See
+> [`../offering/roadmap.md`](../offering/roadmap.md).
+
 
 ## Context
 

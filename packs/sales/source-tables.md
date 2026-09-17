@@ -49,7 +49,7 @@ All names are Dataverse **logical names**, lowercase.
 
 **These dimensions are built as conformed dimensions in Silver, not as pack-local tables.**
 Every later pack depends on this pack getting that right — see
-[`../README.md`](../README.md#the-rule-that-matters-most).
+[`../README.md`](../README.md#conformed-dimensions-still-matter-with-one-pack).
 
 ## opportunity — columns
 
@@ -120,15 +120,14 @@ relationship rather than forcing agreement.
 
 ## quote / salesorder
 
-Follow the same header/detail shape. Needed for quote-to-order conversion and for the
-Revenue-to-Delivery pack.
+Follow the same header/detail shape. Needed for quote-to-order conversion and
+quote-stage velocity.
 
-> **Important for Project Operations:** in Project Operations, the **project contract is
-> built on `salesorder`** and contract lines on `salesorderdetail`. So these tables serve
-> both packs and are a key join point for
-> [Revenue-to-Delivery](../revenue-to-delivery/). `VERIFY` this against the customer's
-> Project Operations version and deployment type — see
-> [ADR 0003](../../docs/decisions/0003-project-operations-scope.md).
+> **Note for a future delivery pack.** In Project Operations the **project contract is
+> built on `salesorder`** and contract lines on `salesorderdetail`, which makes these
+> tables the natural join point from pipeline into delivery. Project Operations is out of
+> scope here — this is recorded only so the tables are not dropped from the Bronze set as
+> "Sales-only overhead" if that pack ever returns. `VERIFY` before relying on it.
 
 ## Choice columns requiring labels
 

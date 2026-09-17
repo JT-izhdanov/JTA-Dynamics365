@@ -12,6 +12,54 @@ offering release, not per commit.
 
 ## [Unreleased]
 
+### Changed — repository narrowed to Dynamics 365 Sales only
+
+**Scope decision: this repository covers the Sales pack and nothing else.** The offering was
+defined around four Customer Engagement report packs plus a cross-app pack; the other four
+are deferred.
+
+- **Removed** `packs/customer-service/`, `packs/project-operations/`, `packs/field-service/`
+  and `packs/revenue-to-delivery/` — 11 files, 67 metric definitions and four source-table
+  mappings. Recoverable from git history; `docs/offering/roadmap.md` records where from and
+  what each was worth keeping
+- **Re-scoped** the offering to *JourneyTeam Analytics for Dynamics 365 Sales*: README,
+  `CLAUDE.md`, offering overview, positioning, roadmap, packs README, reference
+  architecture, medallion design, conformance layer, RLS, playbook, UAT, training, support
+  handoff, prerequisites, config template, deck outline
+- **ADR 0003** (Project Operations scope) and **ADR 0004** (Revenue-to-Delivery packaging)
+  re-statused **Deferred**, bodies unedited — the reasoning is what would make either pack
+  cheap to bring back. `Deferred` added to the allowed ADR statuses
+- **ADR 0002** (naming) flagged as partly overtaken: it named the edition *for Customer
+  Engagement* on a four-pack premise
+- `docs/decisions/README.md` now lists the five decisions the repository owes but tracks in
+  prose — pricing, medallion topology, D9, the choice-label metadata source, and the
+  missing annuity/upgrade path
+- Platform trimmed rather than rewritten: `30_silver_snapshot_facts` keeps only the
+  opportunity snapshot spec, `23_silver_conformance_activities` keeps only Sales activity
+  targets, `40_gold_conformed_dimensions` no longer justifies conformance by cross-app
+  reuse, `customer.example.yaml` drops the tier and the Customer Service tables and gains
+  `opportunityproduct`
+- `dim_project` dropped from the conformed dimension inventory; every other conformed
+  dimension stays conformed and unprefixed
+
+### Commercial consequences of narrowing — both need an owner decision
+
+- **The package structure no longer works.** BASE / PLUS / PREMIUM priced by *how many of
+  four packs* the customer chose. With one pack there is nothing to choose between and the
+  discount ladder has nothing to reward. `pricing-and-packaging.md` carries a **proposed
+  $12,500 single fixed price** (platform $7,500 + Sales $5,000 + 4 hours coaching; list
+  value $13,760) — **proposed, not agreed.** Nothing is quotable and no sales asset stating
+  a price can be produced until it is signed off
+- **The offering loses a differentiator.** Cross-app analytics was one of three stated
+  defensible pillars and **the only one with no first-party equivalent**. Differentiation
+  now rests on the conformance layer and snapshot history — both real, both narrower.
+  `positioning.md` and the deck outline were changed to lead with history and custom
+  fields rather than quietly keeping a claim the repository can no longer support
+- **Timeline inconsistency flagged, not silently resolved.** The playbook is three sprints
+  over six weeks; the offering now quotes 4–5 weeks. The saving is entirely in Sprint 2
+  (one pack, not two to four), so Sprint 2 is marked as one week pending a real number from
+  the first delivery
+
 ### Added — Bronze data profiling
 
 - `docs/bronze-profiling/` — per-entity profiles of Dataverse **as Link to Fabric actually

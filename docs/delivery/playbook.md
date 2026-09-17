@@ -3,12 +3,20 @@
 > This is the **customer** delivery playbook. The first build, against JourneyTeam's own
 > Dynamics 365 Sales system, is a different shape — one developer, validation-focused, and
 > change-controlled as an internal JT Production change. It has its own plan:
-> [`jtp-first-build-plan.md`](jtp-first-build-plan.md). The 6-week timeline below is
-> predicated on that build having happened first.
+> [`jtp-first-build-plan.md`](jtp-first-build-plan.md). The timeline below is predicated
+> on that build having happened first.
 
-**Three sprints, six weeks.** Assumes no additional customizations and no extra support
-beyond the coaching hours in the purchased tier. Anything beyond the packaged scope is
-additional development, quoted separately.
+**Three sprints.** Assumes no additional customizations and no extra support beyond the
+included coaching hours. Anything beyond the packaged scope is additional development,
+quoted separately.
+
+> **Timeline needs reconciling with the single-pack scope.** This playbook was written for
+> a multi-pack engagement at six weeks.
+> [`../offering/pricing-and-packaging.md`](../offering/pricing-and-packaging.md) now quotes
+> **4–5 weeks** for Sales alone, and the saving is all in Sprint 2 — one pack instead of
+> two to four. Sprint 1 (platform) and Sprint 3 (UAT, training, handoff) do not shorten.
+> Treat Sprint 2 as **one week, not two**, until the first delivery gives a real number.
+> Do not quote six weeks and do not quote four without checking this page.
 
 Faster than the Business Central edition's eight weeks because there is no extension to
 build, register, and deploy — [ADR 0001](../decisions/0001-use-link-to-fabric-for-ingestion.md).
@@ -22,8 +30,8 @@ Runs in parallel with contracting; does not consume sprint time.
 - Customer creates accounts and grants access
 - Customer confirms Fabric capacity status (trial or paid SKU) and **region alignment with
   the Dataverse environment**
-- Project lead confirms which Dynamics 365 CE apps are installed, and for Project
-  Operations, **which deployment type** ([ADR 0003](../decisions/0003-project-operations-scope.md))
+- Project lead confirms the Dynamics 365 Sales solution version and the extent of
+  customization — custom tables and columns are outside the fixed price
 - Project lead confirms readiness and schedules kickoff
 
 **Do not start Sprint 1 without confirmed access and confirmed region alignment.** Both are
@@ -43,7 +51,7 @@ capable of stopping the engagement dead, and both are cheap to check beforehand.
   every day of delay is a day of history permanently lost. This is the most important
   thing said on the kickoff call
 - **Set the security expectation:** Dataverse security does not follow data into Fabric.
-  Agree the RLS pattern per pack ([`../architecture/security-and-rls.md`](../architecture/security-and-rls.md))
+  Agree the RLS pattern ([`../architecture/security-and-rls.md`](../architecture/security-and-rls.md))
 - Agree the fiscal calendar, base currency, language, and snapshot retention policy —
   these are configuration inputs, not assumptions
 - Share sample report screenshots so the customer sees the destination
@@ -67,7 +75,7 @@ capable of stopping the engagement dead, and both are cheap to check beforehand.
 - [ ] **Snapshot job running on a schedule and verified to have written at least one day**
 - [ ] Conformed dimensions published to Gold
 - [ ] Customer configuration recorded and stored in the engagement's secure location
-- [ ] RLS pattern agreed in writing per pack
+- [ ] RLS pattern agreed in writing
 
 The snapshot criterion is non-negotiable. Everything else can slip a few days and be
 recovered; snapshot history cannot —
@@ -75,13 +83,11 @@ recovered; snapshot history cannot —
 
 ---
 
-## Sprint 2 (Weeks 3–4) — Packs, models, and reports
+## Sprint 2 (Week 3) — Pack, model, and reports
 
-For each purchased pack:
-
-1. Build the pack's Silver layer
-2. Build the pack's Gold star schema
-3. Deploy the semantic model, implementing `packs/<pack>/metrics.yaml`
+1. Build the Sales Silver layer
+2. Build the Sales Gold star schema
+3. Deploy the semantic model, implementing `packs/sales/metrics.yaml`
 4. Apply and test RLS with named test users
 5. Deploy the report pack and apply customer branding
 6. Configure the semantic model refresh, orchestrated to follow Gold completion
@@ -90,9 +96,9 @@ For each purchased pack:
 
 ### Metric reconciliation
 
-**Every pack reconciles its headline metrics against the source app before UAT.** Open
-pipeline total, case counts by status, work order counts by status — whatever the customer
-will check first. A number that does not tie is the fastest way to lose confidence in the
+**Headline metrics reconcile against Dynamics 365 Sales before UAT.** Open pipeline total,
+won and lost counts by status reason, opportunity counts by owner and stage — whatever the
+customer will check first. A number that does not tie is the fastest way to lose confidence in the
 whole platform, and it is nearly always a conformance issue (currency, status decoding,
 time zone) rather than a report issue.
 
@@ -102,7 +108,7 @@ is not.
 
 ### Sprint 2 exit criteria
 
-- [ ] All purchased packs deployed and refreshing
+- [ ] Sales pack deployed and refreshing
 - [ ] RLS validated with test users against expected row counts
 - [ ] Headline metrics reconciled and documented
 - [ ] Reports branded
@@ -111,7 +117,7 @@ is not.
 
 ---
 
-## Sprint 3 (Weeks 5–6) — UAT, training, and handoff
+## Sprint 3 (Weeks 4–5) — UAT, training, and handoff
 
 ### UAT
 
@@ -166,7 +172,9 @@ Carried forward from the Business Central edition and from the risks in this arc
    before contracting completes.
 2. **Snapshot started late.** Unrecoverable. Sprint 1 exit criterion for this reason.
 3. **Region misalignment discovered in Sprint 1.** Qualify pre-sales.
-4. **Project Operations F&O surprise.** See [ADR 0003](../decisions/0003-project-operations-scope.md).
+4. **Custom schema treated as included.** Custom tables and columns are a priced
+   exclusion; a heavily customized Sales deployment is a scoping conversation, not an
+   absorbed cost.
 5. **Numbers that do not tie.** Reconcile in Sprint 2, not in UAT.
 6. **Security expectations.** Dataverse parity in Power BI is not achievable. Say so at
    kickoff.

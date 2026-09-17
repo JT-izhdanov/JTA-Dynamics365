@@ -65,6 +65,10 @@ SNAPSHOT_SPECS: dict[str, dict] = {
             "name",
             "statecode",
             "statuscode",
+            # VERIFY — at JourneyTeam neither of these carries stage. Stage is a custom
+            # column and traversedpath/stageid/processid are NULL, so BPF stage history
+            # does not exist. See docs/bronze-profiling/opportunity.md and decision D4 in
+            # packs/sales/technical-design.md.
             "salesstagecode",
             "stepname",
             "estimatedvalue",
@@ -84,76 +88,12 @@ SNAPSHOT_SPECS: dict[str, dict] = {
         # statecode 0 = Open for opportunity. VERIFY.
         "open_predicate": F.col("statecode") == 0,
     },
-    "fact_case_snapshot": {
-        "source": "incident",
-        "key": "incidentid",
-        "columns": [
-            "incidentid",
-            "title",
-            "ticketnumber",
-            "statecode",
-            "statuscode",
-            "prioritycode",
-            "casetypecode",
-            "ownerid",
-            "owningbusinessunit",
-            "customerid",
-            "createdon",
-            "modifiedon",
-            "resolveby",
-            "firstresponseslastatus",
-            "resolvebyslastatus",
-        ],
-        # statecode 0 = Active for incident. VERIFY.
-        "open_predicate": F.col("statecode") == 0,
-    },
-    "fact_workorder_snapshot": {
-        "source": "msdyn_workorder",
-        "key": "msdyn_workorderid",
-        "columns": [
-            "msdyn_workorderid",
-            "msdyn_name",
-            "statecode",
-            "statuscode",
-            "msdyn_systemstatus",
-            "msdyn_workordertype",
-            "msdyn_priority",
-            "msdyn_totalamount",
-            "msdyn_totalestimatedduration",
-            "ownerid",
-            "owningbusinessunit",
-            "msdyn_serviceaccount",
-            "createdon",
-            "modifiedon",
-        ],
-        # VERIFY: msdyn_systemstatus drives work order lifecycle more meaningfully than
-        # statecode. Confirm which values represent "still open" before relying on this.
-        "open_predicate": F.col("statecode") == 0,
-    },
-    "fact_project_snapshot": {
-        "source": "msdyn_project",
-        "key": "msdyn_projectid",
-        "columns": [
-            "msdyn_projectid",
-            "msdyn_subject",
-            "statecode",
-            "statuscode",
-            "msdyn_projectstage",
-            "msdyn_scheduledstart",
-            "msdyn_scheduledend",
-            "msdyn_totalactualcost",
-            "msdyn_totalbudgetcost",
-            "ownerid",
-            "owningbusinessunit",
-            "msdyn_customer",
-            "createdon",
-            "modifiedon",
-        ],
-        "open_predicate": F.col("statecode") == 0,
-    },
+    # Sales scope. Case / work order / project snapshot specs were drafted for the other
+    # Customer Engagement packs and removed with them — recover from git history if a pack
+    # returns. Adding one is a spec entry here plus a config entry, nothing more.
 }
 
-# Only snapshot what the purchased packs need.
+# Only snapshot what the configuration enables.
 enabled = config["snapshots"]["enabled"]
 print(f"Enabled snapshots: {enabled}")
 

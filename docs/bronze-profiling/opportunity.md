@@ -163,7 +163,8 @@ They make a real accumulating snapshot possible **without stage history**, which
 otherwise unavailable (§5.5).
 
 `jt_estimatedprojectstartdate` minus `actualclosedate` is sales-to-delivery handover
-latency — a Revenue-to-Delivery metric available from the Sales pack alone.
+latency — normally a cross-app metric, available here from Sales alone because the expected
+start date is captured on the opportunity.
 
 **They appear sparsely populated.** Fill rates decide which lags ship (§8).
 
@@ -351,8 +352,8 @@ rollup. Also: **exclude system and service accounts from any rep-level attributi
 Not a `systemuser`.
 
 **Effect:** `dim_resource` is needed by the **Sales** pack, earlier than the build sequence
-assumed — it was scheduled with Project Operations and Field Service. Build it conformed
-from the start.
+assumed — it was scheduled with packs that are no longer in scope. Build it conformed from
+the start.
 
 Useful side effect: the pre-sales engineers are practice-aligned, so pre-sales resource is
 an independent cross-check on practice attribution.

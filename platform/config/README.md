@@ -35,14 +35,14 @@ These are not inferable and cannot be assumed. Each appears on the kickoff agend
 | Business unit depth | A fixed assumption truncates deep hierarchies |
 | Manager chain availability | Many customers do not maintain `parentsystemuserid`, which makes manager-based RLS unviable |
 | Reporting time zone | Dataverse stores UTC; wrong handling shifts activity into the wrong day |
-| RLS pattern per pack | Dataverse parity is not achievable — agree the pattern explicitly |
+| RLS pattern | Dataverse parity is not achievable — agree the pattern explicitly |
 | Snapshot retention | The one recurring storage cost the architecture adds |
 | SQL endpoint audience | It bypasses semantic model RLS |
 
 ## Table lists
 
 `tables.required`, `tables.optional`, `tables.columns`, and `tables.choice_columns` are
-assembled from the `source-tables.md` of each purchased pack plus the conformance layer's
+assembled from `packs/sales/source-tables.md` plus the conformance layer's
 own needs.
 
 They are **drafts** until validated. Notebook 10 gates the run on them, and during the

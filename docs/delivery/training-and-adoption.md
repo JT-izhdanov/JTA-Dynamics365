@@ -1,25 +1,23 @@
 # Training and adoption
 
-Coaching hours are included in every tier and priced in
-[`../offering/pricing-and-packaging.md`](../offering/pricing-and-packaging.md):
+Coaching hours are included in the offering and priced in
+[`../offering/pricing-and-packaging.md`](../offering/pricing-and-packaging.md) — **do not
+restate the hours or the prices here.** The tier ladder they used to belong to was built on
+choosing among four packs and no longer applies; the single-pack proposal includes a small
+base allocation with add-on blocks above it.
 
-| Tier | Coaching hours |
-|---|---|
-| BASE | 4 |
-| PLUS | 10 |
-| PREMIUM | 20 |
-| Add-on blocks | +10 ($3,150) or +20 ($6,000) |
-
-All tiers include Copilot enablement.
+Copilot enablement is included.
 
 ## Why this is in the offering at all
 
 A deployed platform nobody uses is a renewal that does not happen and a reference that does
-not exist. Adoption is the difference between a delivered project and a customer who buys
-the next pack.
+not exist. Adoption is the difference between a delivered project and a customer who comes back.
 
 It is also the cheapest part of the offering to deliver and the most visible to the
 customer, which makes it disproportionately valuable per hour spent.
+
+With one pack it carries more weight than it used to: there is no second pack to sell at
+handoff, so coaching hours and platform extension are the upsell.
 
 ## Audiences
 
@@ -33,8 +31,9 @@ session.
 | **Power users / analysts** | Semantic model structure, building their own reports, Analyze in Excel, Copilot | Significant — these people create ongoing value |
 | **IT / data owners** | Refresh schedules, snapshot monitoring, RLS administration, what to do when something breaks | Essential — they own it after handoff |
 
-At 4 hours (BASE), prioritize business users and IT. Power-user enablement is where the
-compounding value is, and it is the most common reason a customer buys more hours.
+**At the included base allocation, prioritize business users and IT.** Power-user
+enablement is where the compounding value is, and it is the most common reason a customer
+buys more hours.
 
 ## Content
 
@@ -68,7 +67,7 @@ compounding value is, and it is the most common reason a customer buys more hour
 
 ## Copilot enablement
 
-Included in every tier. Practical scope:
+Included. Practical scope:
 
 - Confirm the customer's Fabric SKU actually supports Copilot **before promising it** —
   see [`../architecture/licensing-and-capacity.md`](../architecture/licensing-and-capacity.md)
@@ -88,7 +87,7 @@ Not billable, but they raise the odds of a reference customer:
 
 - Publish the report packs as a Power BI app with a clear landing page
 - Embed the relevant reports inside Dynamics 365 so users find them where they already work
-- Name an internal owner for each pack
+- Name an internal owner for the semantic model and report pack
 - Set up subscriptions for recurring reviews so the reports appear without being sought
 - Schedule a 30-day check-in
 

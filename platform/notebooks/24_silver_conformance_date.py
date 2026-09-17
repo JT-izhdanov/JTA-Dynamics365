@@ -108,9 +108,9 @@ print(f"dim_date written — {dim_date.count()} rows")
 # ---- CELL ----
 # TODO — holiday and working-day calendar.
 #
-# Required by any metric measured in BUSINESS hours or working days, which includes
-# several headline Customer Service and Field Service metrics (first-response time, SLA
-# attainment, resolution time).
+# Required by any metric measured in BUSINESS hours or working days. For Sales that is
+# time-in-stage, days-to-close, and activity response time — a velocity metric that
+# silently counts weekends is wrong in a way sales managers notice immediately.
 #
 # Holidays are customer-specific and often regional. Options:
 #   - source from the customer's HR or scheduling system

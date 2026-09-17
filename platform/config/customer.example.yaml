@@ -1,4 +1,4 @@
-# JourneyTeam Analytics for Dynamics 365 CE — per-customer configuration TEMPLATE
+# JourneyTeam Analytics for Dynamics 365 Sales — per-customer configuration TEMPLATE
 #
 # Copy this per engagement, fill it in, and store it in the ENGAGEMENT'S OWN SECURE
 # LOCATION. Never commit a real customer's configuration to this repository.
@@ -14,12 +14,10 @@
 customer:
   name: "Example Customer"          # used in workspace naming: JTA-<name>-Platform
   engagement_id: "ENG-0000"
-  # Purchased tier: base | plus | premium | a-la-carte
-  tier: "base"
-  # Packs purchased. Must match directory names under packs/.
+  # Report packs deployed. Must match directory names under packs/. Sales is the only
+  # pack in this repository — see docs/offering/roadmap.md.
   packs:
     - sales
-    - customer-service
   # Conformance layer version deployed. Recorded at handoff; required for any future
   # upgrade. See docs/offering/roadmap.md — there is no automatic upgrade path yet.
   conformance_version: "0.1.0-draft"
@@ -69,7 +67,6 @@ security:
   default_pattern: "own_business_unit_and_below"
   per_pack:
     sales: "manager_hierarchy"
-    customer-service: "own_business_unit_and_below"
   # The SQL endpoint BYPASSES semantic model RLS — whoever has it reads Gold unfiltered.
   sql_endpoint_audience: "platform_team_only"
 
@@ -79,7 +76,6 @@ snapshots:
   # permanently. See docs/architecture/snapshot-and-history.md
   enabled:
     - fact_opportunity_snapshot
-    - fact_case_snapshot
   # Fixed UTC time. Inconsistent timing produces jagged trends.
   schedule_utc: "03:00"
   # Daily detail retained for this many days, then rolled up to month-end snapshots.
@@ -95,8 +91,8 @@ refresh:
   semantic_model_trigger: "after_gold"
 
 tables:
-  # Assembled from the source-tables.md of each purchased pack, plus the conformance
-  # layer's own requirements. Notebook 10 gates the run on these.
+  # Assembled from packs/sales/source-tables.md, plus the conformance layer's own
+  # requirements. Notebook 10 gates the run on these.
   #
   # DRAFT — validate against the live environment. Dataverse schema varies by solution
   # version and installed apps.
@@ -115,15 +111,15 @@ tables:
     - opportunityproduct
     - quote
     - salesorder
-    # customer-service pack
-    - incident
   optional:
     - stringmap
     - optionsetmetadata
     - globaloptionsetmetadata
     - product
     - territory
-    - slakpiinstance
+    # jt_presalesresource is a bookableresource, not a systemuser — see
+    # docs/bronze-profiling/opportunity.md
+    - bookableresource
 
   # Column-level expectations. The most valuable check in notebook 10 — column drift
   # silently produces wrong numbers rather than obvious errors.
@@ -136,22 +132,23 @@ tables:
       - estimatedvalue_base
       - estimatedclosedate
       - ownerid
-    incident:
-      - incidentid
-      - statecode
-      - statuscode
-      - createdon
-      - ownerid
+    opportunityproduct:
+      # Mandatory, not optional: estimatedvalue is system-calculated from the lines, so
+      # the lines are the revenue source. Decision D8 in packs/sales/technical-design.md.
+      - opportunityproductid
+      - opportunityid
+      - productid
+      - quantity
+      - baseamount
+      - extendedamount
 
   # Choice columns in reporting scope. Notebook 20 reports any with no labels resolved —
   # integer status codes in a report are the first thing a customer notices.
   choice_columns:
     opportunity:
       - statecode
+      # statecode 2 mixes the OOB Canceled with custom loss reasons, so any lifecycle
+      # grouping must be at statuscode grain. See docs/bronze-profiling/opportunity.md.
       - statuscode
+      # VERIFY per environment — stage may be a custom column rather than salesstagecode
       - salesstagecode
-    incident:
-      - statecode
-      - statuscode
-      - prioritycode
-      - casetypecode

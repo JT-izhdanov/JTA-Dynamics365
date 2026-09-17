@@ -24,7 +24,7 @@ answer.
 
 ## Entry criteria
 
-- [ ] All purchased packs deployed and refreshing on schedule
+- [ ] The Sales pack is deployed and refreshing on schedule
 - [ ] Headline metrics reconciled against Dynamics 365, with variances documented and explained
 - [ ] RLS deployed and validated by the delivery team with test users
 - [ ] Reports branded
@@ -40,7 +40,7 @@ costs far more in confidence than it does in effort.
 
 | Test | Expected |
 |---|---|
-| Headline totals per pack tie to Dynamics 365 within documented variance | Match, or documented reason |
+| Headline totals tie to Dynamics 365 Sales within documented variance | Match, or documented reason |
 | Record counts by status tie to the source app | Match |
 | Choice / option-set labels display correctly, never as integers | Labels everywhere |
 | Currency amounts are correct and the currency basis is clear | Correct and unambiguous |
@@ -64,7 +64,7 @@ started in Sprint 1.
 
 | Test | Expected |
 |---|---|
-| Each test user sees only their permitted scope, per pack | Per the agreed pattern |
+| Each test user sees only their permitted scope | Per the agreed pattern |
 | A user with no assignment sees nothing, not everything | Fail-closed |
 | Snapshot data respects the **historical** owner, not today's | Historical attribution |
 | SQL endpoint access is limited to the agreed audience | Per agreement |

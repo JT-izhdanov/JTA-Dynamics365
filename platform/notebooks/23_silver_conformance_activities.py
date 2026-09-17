@@ -86,14 +86,13 @@ activities = attach_label(
 # VERIFY: the `regarding_type` values below assume logical entity names. If the shortcut
 # exposes numeric type codes, map them first.
 
+# Sales scope. Add a target only when a table is actually in the Bronze table set —
+# a column for an entity that is not shortcut is dead weight in the bridge.
 TARGETS = {
     "opportunity": "opportunity_guid",
     "lead": "lead_guid",
-    "incident": "incident_guid",
     "account": "account_guid",
     "contact": "contact_guid",
-    "msdyn_workorder": "workorder_guid",
-    "msdyn_project": "project_guid",
     "salesorder": "salesorder_guid",
     "quote": "quote_guid",
 }

@@ -4,87 +4,83 @@
 from other documents; do not restate numbers elsewhere. Changes require offering-owner
 sign-off.
 
-Pricing mirrors the Business Central edition's structure and discount ladder so the two
-sell as one portfolio.
+---
 
-## À la carte
+## ⚠ The package structure no longer works
+
+The original structure priced three tiers by **how many of four report packs** the customer
+chose:
+
+| Tier | Contents | Price |
+|---|---|---|
+| BASE | Platform + **2** packs + 4 hrs coaching | $15,000 |
+| PLUS | Platform + **3** packs + 10 hrs coaching | $20,000 |
+| PREMIUM | Platform + **all 4** packs + cross-app pack + 20 hrs coaching | $30,000 |
+
+With Sales as the only pack, **none of these tiers is sellable.** There is nothing to
+choose between, and the discount ladder existed to reward buying more packs.
+
+**This needs an owner decision before anything is quoted.** The recommendation below is a
+proposal, not an agreed price.
+
+---
+
+## Components that still stand
 
 | Component | Price | Includes |
 |---|---|---|
-| **Platform** | **$7,500** fixed | Link to Fabric configuration, Bronze shortcut validation, **Dataverse conformance layer**, conformed Date / Currency / Owner / Team / Business Unit dimensions, snapshot framework, RLS scaffold, SQL endpoint enablement |
-| **Report pack** | **$5,000** each | Silver and Gold layers for the subject area, Power BI semantic model, Power BI report pack. Available: Sales, Customer Service, Project Operations, Field Service |
-| **Revenue-to-Delivery pack** | **$7,500** | Cross-app semantic model and reports spanning Sales → Project Operations → Field Service. Requires 2 or more report packs |
-| **Coaching** | **$3,150** / **$6,000** | +10 hours or +20 hours of personalized coaching and adoption, including Copilot enablement |
+| **Platform** | **$7,500** | Link to Fabric configuration, Bronze validation, **Dataverse conformance layer**, conformed Date / Currency / Owner / Customer dimensions, snapshot framework, RLS scaffold, SQL endpoint |
+| **Sales report pack** | **$5,000** | Silver and Gold for Sales, Power BI semantic model, report pack |
+| **Coaching** | **$3,150** / **$6,000** | +10 or +20 hours, including Copilot enablement |
 
-**Not included in any fixed price:** Microsoft Fabric SKU licensing, Power BI licensing,
-and any Dataverse capacity implications. See
+**Not included in any fixed price:** Microsoft Fabric SKU licensing, Power BI licensing, and
+any Dataverse capacity implications. See
 [`../architecture/licensing-and-capacity.md`](../architecture/licensing-and-capacity.md).
 
-## Packages
+## Recommended single-offer price
 
-| Tier | Contents | List value | Discount | **Price** |
-|---|---|---|---|---|
-| **BASE** | Platform + **2** report packs + 4 hrs coaching | $18,760 | 20% | **$15,000** |
-| **PLUS** | Platform + **3** report packs + 10 hrs coaching | $25,650 | 22% | **$20,000** |
-| **PREMIUM** | Platform + **all 4** report packs + Revenue-to-Delivery + 20 hrs coaching | $41,000 | 25% | **$30,000** |
+> **PROPOSED — needs offering-owner sign-off.**
 
-All tiers include Copilot enablement as part of coaching. All tiers exclude Fabric and
-Power BI licensing.
+| | |
+|---|---|
+| **JourneyTeam Analytics for Dynamics 365 Sales** | **$12,500 fixed** |
+| Contents | Platform + Sales report pack + 4 hours coaching and Copilot enablement |
+| Delivery | 4–5 weeks |
+| Excludes | Fabric SKU and Power BI licensing |
 
-### Package math
+Reasoning:
 
-Kept explicit so the discount ladder stays defensible in a negotiation.
+- **Component list value is $13,760** ($7,500 + $5,000 + 4 hrs at the $315/hr implied
+  coaching rate). $12,500 is a clean number just under it.
+- **No discount ladder.** A ladder rewards buying more; with one pack there is nothing more
+  to buy, so a tier structure would be theatre. One price, published contents.
+- **Keep the components visible.** When a second pack ships it is a clean **+$5,000**
+  increment, and the tier structure can return without repricing the platform.
+- **It lowers the entry point** from $15,000 to $12,500, which suits a single-pack offer
+  aimed at a broader Sales installed base.
 
-```
-BASE     7,500 + (2 × 5,000) + 1,260  = 18,760  × 0.80 = 15,008  → $15,000
-PLUS     7,500 + (3 × 5,000) + 3,150  = 25,650  × 0.78 = 20,007  → $20,000
-PREMIUM  7,500 + (4 × 5,000) + 7,500 + 6,000 = 41,000  × 0.75 = 30,750  → $30,000
-```
-
-The 4-hour coaching allotment in BASE is priced at the $315/hr coaching rate implied by the
-+10 hour block.
-
-PREMIUM rounds down $750 below the 25% line. That is deliberate — a clean $30,000 number
-is worth more in a conversation than the extra $750, and it makes PREMIUM the obvious
-anchor.
+**Hold the platform at $7,500** if the components are ever quoted separately. It matches the
+Business Central edition, and discounting it would undercut the sibling offering.
 
 ## Additional development (scoped separately)
 
-Quoted per engagement, outside the fixed price:
-
-- Extract additional Dataverse tables or custom tables and columns
-- Bring additional data sources into the Fabric platform (on-prem, cloud, file, streaming)
-- Ingest Dynamics 365 Finance & Operations data (different ingestion path — see
-  [ADR 0003](../decisions/0003-project-operations-scope.md))
-- Develop additional semantic models
-- Develop additional Power BI reports and dashboards
+- Extract additional Dataverse tables, or custom tables and columns
+- Bring additional data sources into the platform (on-prem, cloud, file, streaming)
+- Develop additional semantic models, reports or dashboards
 - Build and deliver a custom training plan
+- Deeper RLS beyond the scaffold — see [`../architecture/security-and-rls.md`](../architecture/security-and-rls.md)
 
-## Positioning notes for the pricing conversation
+## Positioning notes
 
-- **Hold the platform fee at $7,500.** The Business Central edition needed a custom
-  extension and the CE edition does not, so there is an obvious temptation to discount.
-  Do not. The effort moved into the conformance layer, which is the harder and more
-  valuable work, and a lower anchor undercuts the BC package it sits beside.
-- **PREMIUM is fully deliverable.** Unlike the BC edition's PREMIUM tier, every component
-  of CE PREMIUM exists once the four packs ship. Nothing is sold as "available later."
-  Confirm against [`roadmap.md`](roadmap.md) before quoting it.
-- **The 6-week timeline is part of the price.** Faster than the BC edition, because there
-  is no extension to build and deploy.
 - **Licensing is the customer's line item, not ours.** Fabric SKU comes out of a different
   budget than services. Surface it early so it does not surface late.
+- **The timeline is part of the price.** 4–5 weeks for a single pack, against 8 weeks for
+  the Business Central edition.
+- **Nothing is sold as "available later."** One pack, GA, no TBD components — which the
+  Business Central edition's top tier cannot currently claim.
 
-## Differences from the Business Central edition
+## Note on the Business Central edition
 
-| | BC edition | CE edition |
-|---|---|---|
-| Platform fee | $7,500 | $7,500 |
-| Per-suite | $5,000 | $5,000 |
-| Cross-app pack | none | $7,500 |
-| BASE / PLUS | $15,000 / $20,000 | $15,000 / $20,000 |
-| Top tier | $29,000 (5 suites, some TBD) | $30,000 (4 packs + cross-app, all deliverable) |
-| Delivery | 8 weeks | 6 weeks |
-
-> The BC extended deck currently shows the platform at **$10,000** on its Microsoft-comparison
-> slide and **$7,500** on its pricing slide. $7,500 is the correct number and the BC deck
-> needs correcting. Do not propagate the $10,000 figure into CE material.
+Its extended deck shows the platform at **$10,000** on the Microsoft-comparison slide and
+**$7,500** on the pricing slide. $7,500 is correct and that deck needs fixing. Do not
+propagate $10,000.

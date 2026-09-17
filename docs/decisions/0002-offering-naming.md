@@ -1,6 +1,10 @@
 # 0002 — Offering and portfolio naming
 
-**Status:** Proposed
+**Status:** Proposed — **and now partly overtaken.** This ADR named the edition *for
+Customer Engagement* on the premise of four report packs. The repository covers **Sales
+only**, and the offering is titled *JourneyTeam Analytics for Dynamics 365 Sales*. The
+portfolio reasoning below still holds; the edition boundary needs a new ADR if Sales-only
+is permanent. See [`../offering/roadmap.md`](../offering/roadmap.md).
 
 ## Context
 
@@ -12,7 +16,7 @@ Naming this one *"JourneyTeam Analytics for Dynamics 365"* collides with it, bec
 either covers, and internally there is no unambiguous way to refer to one edition.
 
 There is also a third edition on the horizon — Finance & Operations
-([`../offering/roadmap.md`](../offering/roadmap.md#candidate-future-scope)) — so this needs
+([`../offering/roadmap.md`](../offering/roadmap.md#deferred)) — so this needs
 solving as a portfolio, not as a one-off title fix.
 
 Complicating factor: "Customer Engagement" is accurate Microsoft terminology and is

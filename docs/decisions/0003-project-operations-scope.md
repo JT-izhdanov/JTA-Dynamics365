@@ -1,6 +1,12 @@
 # 0003 — Project Operations pack deployment scope
 
-**Status:** Proposed — **needs an owner decision before Project Operations is quoted**
+**Status:** **Deferred** — Project Operations is out of scope for this repository
+
+> **Deferred with the pack, 2026-09-17.** The repository was narrowed to Dynamics 365 Sales
+> only, so this decision is not live. The body below is unedited — it holds reasoning worth
+> keeping if the pack returns. See
+> [`../offering/roadmap.md`](../offering/roadmap.md).
+
 
 ## Context
 
@@ -45,7 +51,7 @@ nothing about that sentence signals the difference.
 **Option 1.**
 
 - Project Operations is fourth in the build sequence
-  ([`../offering/roadmap.md`](../offering/roadmap.md#build-sequence-and-rationale)) — so
+  ([`../offering/roadmap.md`](../offering/roadmap.md#sales-pack-build-order)) — so
   taking on an F&O ingestion path now would delay three packs that have no such problem.
 - F&O ingestion is a **separate edition**, not a pack. Building it as a pack side effect
   would be the wrong place to solve it and would produce an ingestion path nobody owns.

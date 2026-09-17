@@ -6,11 +6,11 @@ Exposes the Silver conformed dimensions into the `gold` schema for semantic mode
 THE RULE THIS NOTEBOOK ENFORCES: conformed dimensions are SHARED, not copied. Gold exposes
 a VIEW over the Silver dimension. A pack never gets its own physical copy.
 
-That rule is what makes cross-app analytics possible at all — Revenue-to-Delivery works
-because Sales, Project Operations, and Field Service all point at the same dim_customer and
-dim_owner. It is also the rule most likely to be broken under delivery pressure ("just
-duplicate it for this one pack"), which is why it is enforced here in code rather than left
-to discipline.
+That rule is what keeps the conformance layer reusable IP rather than one customer's Sales
+model: reusability is decided when a dimension is built, not when a second consumer shows
+up. It is also the rule most likely to be broken under delivery pressure ("just duplicate
+it for this one pack"), which is why it is enforced here in code rather than left to
+discipline.
 
 See docs/architecture/medallion-design.md
 See docs/architecture/conformance-layer.md
@@ -94,13 +94,16 @@ for table in CONFORMED + OPTIONAL_CONFORMED:
 print("Conformed dimensions published to Gold.")
 
 # ---- CELL ----
-# TODO — pack Gold builds (notebooks 5x).
+# TODO — Sales Gold build (notebooks 6x).
 #
-# Each pack publishes its own fact tables into Gold, prefixed by pack:
-#   sales__fact_opportunity, cs__fact_case, po__fact_actual, fs__fact_workorder,
-#   r2d__fact_revenue_to_delivery
+# The pack publishes its own fact tables into Gold, prefixed by pack:
+#   sales__fact_opportunity, sales__fact_opportunity_snapshot,
+#   sales__fact_opportunity_line, sales__fact_opportunity_stage_transition
+#
+# The pack prefix is kept even with a single pack, so a second one can land without
+# renaming anything. See packs/sales/technical-design.md for the Gold star schema.
 #
 # Pack facts join to the conformed dimension VIEWS published above. A pack that needs a
 # dimension attribute which does not exist should extend the CONFORMED dimension in Silver
-# — not create a pack-local variant. If two packs genuinely need incompatible versions of
-# a dimension, that is an architecture question worth an ADR, not a local workaround.
+# — not create a pack-local variant. If two packs ever genuinely need incompatible versions
+# of a dimension, that is an architecture question worth an ADR, not a local workaround.

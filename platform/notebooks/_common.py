@@ -58,8 +58,8 @@ def bronze(spark: SparkSession, table: str) -> DataFrame:
     to it. All JourneyTeam logic must be reproducible from Bronze by re-running notebooks,
     so that recreating the shortcut loses nothing but time.
 
-    `table` is the Dataverse *logical* name, lowercase (account, opportunity, incident,
-    msdyn_workorder). Never a display name.
+    `table` is the Dataverse *logical* name, lowercase (account, opportunity,
+    opportunityproduct, systemuser). Never a display name.
     """
     return spark.read.table(f"{LAKEHOUSE}.{BRONZE}.{table}")
 

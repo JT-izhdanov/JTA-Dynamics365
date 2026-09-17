@@ -1,11 +1,13 @@
 # Conformed dimensions
 
-Shared across every pack. Built by the conformance notebooks in
+Built conformed — not Sales-local — by the conformance notebooks in
 [`../../platform/notebooks/`](../../platform/notebooks/) and published into Gold as views
 by `40_gold_conformed_dimensions`.
 
-**A pack consumes these. It never copies or redefines them.** See
-[`../README.md`](../README.md#the-rule-that-matters-most).
+**The pack consumes these. It never copies or redefines them, and none is prefixed
+`sales_`.** See
+[`../README.md`](../README.md#conformed-dimensions-still-matter-with-one-pack) for why that
+still holds with a single pack.
 
 > **Draft.** Column lists are written from general Dataverse knowledge, not validated
 > against a live environment. Correct them during the first build.
@@ -14,22 +16,22 @@ by `40_gold_conformed_dimensions`.
 
 | Dimension | Built by | Grain | SCD | Used by |
 |---|---|---|---|---|
-| `dim_date` | `24_` | day | n/a | all |
-| `dim_owner` | `22_` | owner version | **SCD2** | all, and RLS |
-| `dim_currency` | `21_` | currency | Type 1 | all with money |
-| `dim_customer` | `5x_` | account version | **SCD2** | all |
-| `dim_contact` | `5x_` | contact | Type 1 | all |
-| `dim_product` | `5x_` | product version | **SCD2** | Sales, Field Service, Project Ops |
-| `dim_territory` | `5x_` | territory | Type 1 | Sales, Field Service |
-| `dim_project` | `5x_` | project | Type 1 | Project Ops, Revenue-to-Delivery |
-| `dim_resource` | `5x_` | resource | Type 1 | Field Service, Project Ops |
+| `dim_date` | `24_` | day | n/a | all facts |
+| `dim_owner` | `22_` | owner version | **SCD2** | all facts, and RLS |
+| `dim_currency` | `21_` | currency | Type 1 | all money |
+| `dim_customer` | `5x_` | account version | **SCD2** | all facts |
+| `dim_contact` | `5x_` | contact | Type 1 | contact-party opportunities |
+| `dim_product` | `5x_` | product version | **SCD2** | `fact_opportunity_line` |
+| `dim_territory` | `5x_` | territory | Type 1 | Sales |
+| `dim_resource` | `5x_` | resource | Type 1 | `jt_presalesresource` — a `bookableresource`, not a `systemuser` |
 | `lkp_choice_label` | `20_` | table × column × value | n/a | every Silver build |
-| `bridge_activity` | `23_` | activity | n/a | all |
+| `bridge_activity` | `23_` | activity | n/a | activity analytics |
 
-`dim_customer`, `dim_contact`, `dim_product`, `dim_territory`, `dim_project`, and
-`dim_resource` are not yet built — the `5x_` notebooks do not exist. They are specified
-here so the first pack build creates them as *conformed* dimensions rather than
-pack-local ones.
+`dim_customer`, `dim_contact`, `dim_product`, `dim_territory`, and `dim_resource` are not
+yet built — the `5x_` notebooks do not exist. They are specified here so the first build
+creates them as *conformed* dimensions rather than pack-local ones.
+
+`dim_project` was specified for Project Operations and has been removed with that pack.
 
 ## Why SCD2 on only some
 
@@ -69,10 +71,10 @@ Calendar attributes, fiscal attributes (`fiscal_year`, `fiscal_quarter`,
 (`is_today`, `is_past`, `days_from_today`).
 
 **Not yet built:** the holiday and working-day calendar. Required by any metric measured in
-business hours — which includes several headline Customer Service and Field Service
-metrics. Until it exists, those metrics are calendar-hours and **must be labelled as such
-in `metrics.yaml`**. An SLA metric that silently ignores weekends is wrong in a way
-customers notice immediately.
+business hours. For Sales that is time-in-stage, days-to-close, and activity response
+time. Until it exists, those metrics are calendar-hours and **must be labelled as such in
+`metrics.yaml`** via `business_hours`. A velocity metric that silently counts weekends is
+wrong in a way sales managers notice immediately.
 
 ## dim_owner
 
@@ -124,10 +126,10 @@ investigated, not silently drop the fact row.
 One row per activity with a typed nullable key per target entity, resolving the
 polymorphic `regardingobjectid`.
 
-Lets a pack model join activities with a normal relationship instead of re-solving
-polymorphism in DAX. Activity analytics — touches per opportunity, response time on a case,
-contact cadence — is among the highest-value question sets and the most annoying to build,
-so it is solved once here.
+Lets the model join activities with a normal relationship instead of re-solving
+polymorphism in DAX. Activity analytics — touches per opportunity, contact cadence,
+activity-to-outcome correlation — is among the highest-value question sets and the most
+annoying to build, so it is solved once here.
 
 ## Conformed status groupings
 
@@ -136,7 +138,12 @@ Dataverse has two related columns on most tables: `statecode` (coarse lifecycle)
 without the other is a common source of wrong counts.
 
 The conformance layer decodes both, keeps both, and adds a **conformed status grouping** per
-table — `Open` / `Won` / `Lost` / `Cancelled` and equivalents — so cross-app reports can
-reason about lifecycle consistently.
+table — `Open` / `Won` / `Lost` / `Cancelled` and equivalents — so reports reason about
+lifecycle consistently across tables.
+
+For `opportunity` specifically this is load-bearing and not optional: `statecode = 2` mixes
+the out-of-the-box *Canceled* with JourneyTeam's custom loss reasons, so grouping has to
+happen at `statuscode` grain. See
+[`../../docs/bronze-profiling/opportunity.md`](../../docs/bronze-profiling/opportunity.md).
 
 Raw integers are never exposed to the semantic model.

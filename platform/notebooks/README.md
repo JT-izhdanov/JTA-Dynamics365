@@ -17,7 +17,8 @@ Numbered by medallion stage. Run in numeric order.
 | 24 | `24_silver_conformance_date.py` | `silver.dim_date` with the customer's fiscal calendar |
 | 30 | `30_silver_snapshot_facts.py` | Daily append to `silver.fact_*_snapshot` |
 | 40 | `40_gold_conformed_dimensions.py` | Conformed dimensions published into `gold` |
-| 5x | *(per pack — future)* | Pack Silver and Gold builds |
+| 5x | *(not yet written)* | Remaining conformed dimensions — dim_customer, dim_contact, dim_product, dim_territory, dim_resource |
+| 6x | *(not yet written)* | Sales Silver and Gold builds |
 
 `10` gates the run. Conformance (`2x`) precedes everything. `30` runs daily regardless of
 whether Gold is rebuilt.

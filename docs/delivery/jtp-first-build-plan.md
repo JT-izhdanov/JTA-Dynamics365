@@ -146,12 +146,18 @@ is out of scope for this pack and becomes a candidate additional source.
 ### 3.5 Practice pipeline to delivery capacity
 
 "Pipeline by practice by expected start date" is the question a services organisation
-actually asks, because it drives staffing. It is partly a Sales question and fully answered
-only with Project Operations.
+actually asks, because it drives staffing. It is partly a Sales question — expected close
+date and practice get most of the way there — and fully answered only with delivery data,
+which is not in scope.
 
-If JourneyTeam runs Project Operations, this is a strong argument for building that pack
-and **Revenue-to-Delivery** next — and JourneyTeam becomes the reference implementation for
-the offering's best differentiator.
+**Scope it as Sales-only and say so.** Deliver pipeline by practice by expected close date,
+and state plainly that the conversion to booked capacity is not in this release. Do not
+approximate delivery data from Sales fields; a staffing number that is quietly wrong is
+worse than one that is absent.
+
+If JourneyTeam wants the full question answered, that is the argument for bringing a
+delivery pack back into scope — see
+[`../offering/roadmap.md`](../offering/roadmap.md).
 
 ### 3.6 The upside — JTP is representative, not idiosyncratic
 
@@ -375,7 +381,7 @@ Beyond technical design decisions **D1–D10**, this build needs:
 | J6 | RLS policy for JourneyTeam's own pipeline | Sales leadership + IT | Phase 8 |
 | J7 | Developer allocation percentage | Delivery management | **Now** — it sets the date |
 | J8 | Named technical reviewer | Delivery management | Phase 0 |
-| J9 | Whether Project Operations and Revenue-to-Delivery follow (§3.5) | Offering owner | After Release 1 |
+| J9 | Whether a delivery pack returns to scope, which §3.5 depends on | Offering owner | After Release 1 |
 
 **J1, J3, and J7 are the consequential ones.** J1 and J3 can invalidate model work already
 done if answered late. J7 is the only input needed to turn this plan into a date.

@@ -1,63 +1,65 @@
 # Roadmap
 
-Availability drives what sales is allowed to quote. A pack is **GA** only when its source
-mapping is validated, its metrics are implemented, its model and reports are built, and it
-has been delivered successfully at least once.
+**Repository scope: Dynamics 365 Sales only.** Everything else on this page is deferred and
+not documented here.
 
-## Pack availability
+A pack is **GA** only when its source mapping is validated, its metrics are implemented,
+its model and reports are built, and it has been delivered successfully at least once.
 
-| Pack | Status | Target | Gate to GA |
-|---|---|---|---|
-| Platform (conformance layer) | In build | — | Validated against a live Dataverse environment |
-| Sales | In build | — | Source mapping validated, snapshot fact proven, model + reports built |
-| Customer Service | Planned | After Sales | Source mapping validated, SLA/KPI instance modeling confirmed |
-| Project Operations | Planned — **scope gated** | After Customer Service | [ADR 0003](../decisions/0003-project-operations-scope.md) resolved |
-| Field Service | Planned | After Project Operations | Source mapping validated, booking vs. work order grain resolved |
-| Revenue-to-Delivery | Planned | Requires Sales + Project Ops + Field Service | Two or more packs GA |
+## In scope
 
-**Do not quote a pack that is not GA** without an explicit exception from the offering
-owner and a written caveat in the proposal. The Business Central edition's PREMIUM tier
-currently sells "choose 5" against suites still marked TBD; that is the mistake this
-table exists to prevent.
+| Component | Status | Gate to GA |
+|---|---|---|
+| Platform (conformance layer) | In build | Validated against a live Dataverse environment |
+| **Sales pack** | **In build** | Source mapping corrected from Bronze profiling, snapshot fact proven, model + reports built, reconciled |
 
-## Build sequence and rationale
+## Deferred
 
-1. **Platform / conformance layer first.** Every pack depends on it. Building it against
-   one real environment before any pack is what makes the rest repeatable.
-2. **Sales second.** Largest installed base, clearest metric set, and the pipeline snapshot
-   proves the history capability that the whole offering is differentiated on.
-3. **Customer Service third.** Second-largest installed base. Case aging exercises the same
-   snapshot framework, which de-risks it.
-4. **Project Operations fourth**, and only once its deployment scope is settled. It is the
-   only pack with a genuine architectural fork (see ADR 0003), so it should not be first.
-5. **Field Service fifth.** Rich data, but the smallest installed base of the four and the
-   most variation between customers in how work orders are used.
-6. **Revenue-to-Delivery last**, because it is composed from the others.
+Designed and analysed, then removed from this repository as out of scope. If any returns,
+recover the analysis from git history rather than starting over — the drafts included
+source mappings and metric definitions worth reusing.
 
-## Candidate future scope
+| Deferred | Why it was worth having | Recover from |
+|---|---|---|
+| Customer Service pack | Second-largest installed base; case aging reuses the snapshot framework | `packs/customer-service/` before `fd0e436` |
+| Project Operations pack | Carried a real scope trap — F&O-resident financials — recorded in [ADR 0003](../decisions/0003-project-operations-scope.md) | `packs/project-operations/` |
+| Field Service pack | Work-order vs booking grain problem documented | `packs/field-service/` |
+| Revenue-to-Delivery (cross-app) | The strongest differentiator in the original design; no first-party equivalent. Packaging logic in [ADR 0004](../decisions/0004-cross-app-pack-packaging.md) | `packs/revenue-to-delivery/` |
+| Customer Insights – Journeys pack | Marketing analytics; Dataverse-native, same architecture | never drafted |
+| Finance & Operations edition | Different ingestion path — a separate edition, not a pack | never drafted |
 
-Not committed. Listed so the architecture leaves room for them.
+**What narrowing to one pack costs the offering:** cross-app analytics was one of three
+stated differentiators and the only one with no first-party equivalent. With Sales alone the
+differentiation rests on the conformance layer and snapshot history. Both are real, but the
+competitive story is narrower — worth knowing when positioning against a prospect who
+already has first-party Sales analytics.
 
-| Candidate | Note |
-|---|---|
-| **Customer Insights – Journeys pack** | Marketing analytics. Dataverse-native, so it fits the same architecture. Natural fifth pack and would let CE PREMIUM mirror BC's "choose 5" framing |
-| **Finance & Operations edition** | Different ingestion path than Dataverse Link to Fabric. A separate edition, not a pack. Would complete the portfolio |
-| **Contact Center / Omnichannel depth** | Conversation and session analytics. Partly dependent on which Omnichannel tables a customer has |
-| **Managed service / support annuity** | The offering currently ends at support handoff. A recurring-revenue wrapper is the largest untapped commercial opportunity |
-| **Benchmark pack** | Anonymized cross-customer benchmarks. Commercially attractive, but needs a data rights and privacy review before it is even scoped |
+## Sales pack build order
 
-## Known gaps in the offering as currently defined
+1. **Platform / conformance layer first.** Everything depends on it, and building it against
+   one real environment is what makes the rest repeatable.
+2. **Snapshots running second**, before any model or report. History cannot be backfilled,
+   so every day of delay is a day permanently lost.
+3. **Silver, then Gold, then the semantic model, then reports** — see
+   [`../../packs/sales/technical-design.md`](../../packs/sales/technical-design.md) §15 for
+   the numbered sequence.
 
-Carried here so they are not forgotten once delivery starts:
+## Known gaps
+
+Carried here so they are not forgotten once delivery starts.
 
 - **No post-go-live annuity.** Delivery ends at support handoff. Every customer will need
-  ongoing model changes, and there is no packaged way to sell that yet.
+  ongoing model changes, and there is no packaged way to sell that. Largest untapped
+  commercial opportunity in the offering.
 - **No defined upgrade path.** When Microsoft changes Dataverse schema or a customer
-  upgrades an app solution, there is no versioning or re-deployment story for packs already
-  delivered. This is the single biggest risk to repeatable delivery at scale.
-- **RLS depth is unscoped.** The platform fee includes an RLS *scaffold*. Customers with
-  complex business unit or team hierarchies will need more, and it is not priced.
-- **No multi-environment story.** Customers with separate Dataverse Dev/Test/Prod
-  environments will ask how the packs promote between them.
+  upgrades an app solution, there is no versioning or re-deployment story for a pack already
+  delivered. Biggest risk to repeatable delivery at scale.
+- **RLS depth is unscoped.** The platform includes an RLS *scaffold*; complex hierarchies
+  need more and it is not priced.
+- **No multi-environment story.** Customers with separate Dataverse Dev/Test/Prod will ask
+  how packs promote between them.
+- **Pricing is unresolved** — see [`pricing-and-packaging.md`](pricing-and-packaging.md).
+- **Reference topology diverges from the deployed one** — see
+  [ADR needed](../architecture/jt-medallion-topology.md#1-this-diverges-from-the-products-reference-design).
 
-Each of these should become an ADR before the first customer delivery, not after.
+Each should become an ADR before the first customer delivery, not after.

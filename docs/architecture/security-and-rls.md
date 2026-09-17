@@ -26,7 +26,7 @@ The $7,500 platform fee includes an **RLS scaffold**:
 ## What it does not include
 
 Anything beyond these patterns is additional development and is **not currently priced** —
-a known gap tracked in [`../offering/roadmap.md`](../offering/roadmap.md#known-gaps-in-the-offering-as-currently-defined).
+a known gap tracked in [`../offering/roadmap.md`](../offering/roadmap.md#known-gaps).
 
 | Pattern | In scope | Note |
 |---|---|---|
@@ -47,7 +47,7 @@ promising it converts a design conversation into a defect.
 
 1. **`dim_owner` is the single source of scope.** The hierarchy built for reporting is the
    same one that drives security. One artifact, two uses — this is why the conformance
-   layer resolves it rather than each pack doing its own.
+   layer resolves it once rather than the pack doing its own.
 2. **Map users to scope in Silver, not in DAX.** A mapping table is inspectable,
    testable, and refreshable. Complex DAX RLS expressions are none of those things and
    are the usual cause of RLS performance problems.
@@ -85,7 +85,7 @@ promising it converts a design conversation into a defect.
 
 Decide and document, per customer, at kickoff:
 
-- Which of the supported patterns applies, per pack
+- Which of the supported patterns applies
 - Whether the customer expects Dataverse parity (and reset that expectation immediately if so)
 - Who gets SQL endpoint access
 - Who owns RLS changes after handoff

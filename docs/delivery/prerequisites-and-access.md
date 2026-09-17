@@ -12,8 +12,8 @@ the engagement is deliverable at all.
 
 | # | Question | Why it matters |
 |---|---|---|
-| 1 | Which Dynamics 365 CE apps are installed and actively used? | Determines which packs can be delivered. Installed ≠ used; a pack against an unused app produces empty reports |
-| 2 | **Which Project Operations deployment type?** (Lite / resource-non-stocked / stocked) | **Can drag Finance & Operations into scope.** See [ADR 0003](../decisions/0003-project-operations-scope.md). Mandatory before quoting that pack |
+| 1 | Is Dynamics 365 Sales installed and **actively used**? Which solution version? | Installed ≠ used; a pack against an unused app produces empty reports. Schema varies by solution version |
+| 2 | Is the sales process run on a **business process flow**, a stage field, or both? | Determines whether stage history exists at all. At JourneyTeam it does not — `traversedpath`, `stageid` and `processid` are NULL, so snapshots are the only route. See [`../bronze-profiling/opportunity.md`](../bronze-profiling/opportunity.md) |
 | 3 | Is there an existing Fabric capacity? Which SKU? Trial or paid? | Production needs a paid SKU. SKU affects Power BI licensing and Copilot availability |
 | 4 | **What region is the Dataverse environment in, and what region is / would the Fabric capacity be in?** | Region alignment is a hard requirement for Link to Fabric. A mismatch can block the engagement entirely |
 | 5 | Is Azure Synapse Link for Dataverse already configured? | Not a blocker, but affects metadata handling. See [`../architecture/ingestion-link-to-fabric.md`](../architecture/ingestion-link-to-fabric.md) |
@@ -22,8 +22,8 @@ the engagement is deliverable at all.
 | 8 | What is the fiscal calendar? | Configuration input for `dim_date`; not assumable |
 | 9 | Is the organization multi-currency? What is the base currency? | Conformance configuration; multi-currency significantly raises reconciliation care |
 | 10 | What row-level security is expected? Does the customer expect Dataverse parity? | Dataverse parity is not achievable. Reset that expectation pre-sales, not at UAT. See [`../architecture/security-and-rls.md`](../architecture/security-and-rls.md) |
-| 11 | How heavily customized is the environment — custom tables and columns in reporting scope? | Packaged packs cover standard schema. Custom fields are additional development |
-| 12 | Are there separate Dataverse Dev/Test/Prod environments, and is promotion between them expected? | No multi-environment story exists yet — a known gap in [`../offering/roadmap.md`](../offering/roadmap.md#known-gaps-in-the-offering-as-currently-defined) |
+| 11 | How heavily customized is the environment — custom tables and columns in reporting scope? | The packaged pack covers standard schema. Custom fields are additional development, and at JourneyTeam the analytically important columns are all custom |
+| 12 | Are there separate Dataverse Dev/Test/Prod environments, and is promotion between them expected? | No multi-environment story exists yet — a known gap in [`../offering/roadmap.md`](../offering/roadmap.md#known-gaps) |
 | 13 | Does the customer also run Business Central or Finance & Operations? | Portfolio cross-sell, and shapes the architecture conversation |
 | 14 | Who is the executive sponsor, and who owns metric definitions? | Fixed-price delivery needs a decision-maker for metric disputes |
 
@@ -74,7 +74,7 @@ Sent by the project lead in the welcome email, before Sprint 1.
 | Base currency and currencies in use | Currency conformance |
 | Business unit / territory structure | `dim_owner`, RLS |
 | Branding assets — logo, colors | Report branding |
-| Agreed RLS pattern per pack | Security implementation |
+| Agreed RLS pattern | Security implementation |
 | Snapshot retention preference | Cost and configuration |
 
 ---

@@ -12,6 +12,10 @@ Customer-facing material for the offering. **Nothing committed yet.**
 | Architecture diagram | Portfolio and edition-level | `docs/architecture/reference-architecture.md` |
 | Proposal template | With the standard exclusions pre-filled | `docs/offering/pricing-and-packaging.md` |
 
+**Blocked on pricing.** No asset that states a price can be produced until the single-pack
+price is signed off — see
+[`../docs/offering/pricing-and-packaging.md`](../docs/offering/pricing-and-packaging.md).
+
 ## Rules
 
 1. **Never restate prices here.** Reference
@@ -20,16 +24,21 @@ Customer-facing material for the offering. **Nothing committed yet.**
    happened to the Business Central deck, where the platform fee appears as both $7,500 and
    $10,000.
 2. **Never quote a pack that is not GA.** Check
-   [`../docs/offering/roadmap.md`](../docs/offering/roadmap.md) before every proposal.
-3. **Microsoft licensing figures are dated snapshots**, re-verified from Microsoft's
+   [`../docs/offering/roadmap.md`](../docs/offering/roadmap.md) before every proposal. The
+   Sales pack is **in build, not GA** — nothing here ships to a customer yet.
+3. **Sales is the only pack.** Do not show Customer Service, Project Operations, Field
+   Service, or cross-app content, marked roadmap or otherwise. "One platform, every
+   Dynamics app" is an architecture claim about the landing zone, not a catalogue.
+4. **Microsoft licensing figures are dated snapshots**, re-verified from Microsoft's
    published pricing before each use. See
    [`../docs/architecture/licensing-and-capacity.md`](../docs/architecture/licensing-and-capacity.md).
-4. **No customer data in any asset.** Demo material uses JourneyTeam demo data only. No
-   screenshots containing real customer records.
-5. **Carry the edition name in every filename** to avoid ambiguity with Business Central
+5. **No customer data in any asset.** Demo material uses JourneyTeam demo data only. No
+   screenshots containing real customer records — and not JourneyTeam's own pipeline
+   either, which is real confidential data.
+6. **Carry the edition name in every filename** to avoid ambiguity with Business Central
    material — see [ADR 0002](../docs/decisions/0002-offering-naming.md).
-6. **Do not claim first-party analytics are bad.** Customer Service and Field Service ship
-   respectable embedded analytics. The honest framing in
+7. **Do not claim first-party analytics are bad.** Dynamics 365 Sales ships respectable
+   out-of-the-box analytics, and Sales Premium adds forecasting. The honest framing in
    [`../docs/offering/positioning.md`](../docs/offering/positioning.md) is more persuasive
    and does not lose credibility with a prospect who uses them.
 
@@ -41,8 +50,8 @@ later:
 - Microsoft Fabric capacity and Power BI licensing
 - Custom Dataverse tables and columns
 - Non-Dataverse data sources
-- Dynamics 365 Finance & Operations data — **including F&O-resident Project Operations
-  financials** ([ADR 0003](../docs/decisions/0003-project-operations-scope.md))
+- Any Dynamics 365 app other than Sales — there is no packaged pack for one
+- Non-Dataverse Dynamics data (Finance & Operations)
 - Dataverse security parity in Power BI ([RLS scope](../docs/architecture/security-and-rls.md))
 - Snapshot history prior to deployment — not backfillable
 - Business-hours-based metrics, until the working-day calendar ships

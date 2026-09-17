@@ -95,10 +95,17 @@ REPORTS — 8 pages + paginated detail
 ```
 
 Four conformed dimensions — `dim_customer`, `dim_contact`, `dim_product`,
-`dim_territory` — **are created by this pack and consumed by every later pack.** They must
-be built as conformed dimensions in Silver, not as `sales_*` local tables. This is the
-single most consequential thing to get right here, because Customer Service, Project
-Operations, Field Service, and Revenue-to-Delivery all depend on it.
+`dim_territory` — **are created by this build and belong to the platform, not to this
+pack.** They must be built as conformed dimensions in Silver, not as `sales_*` local
+tables.
+
+This is the single most consequential thing to get right here, and it is *more* important
+with one pack rather than less: there is no second consumer to force the discipline, and
+reusability is decided when a dimension is built, not when a second consumer appears. A
+`sales_dim_customer` would have to be rebuilt. It is also a correctness rule on its own
+terms — `dim_owner` is SCD2 so that historical pipeline attributes to the owner at the
+time, which has nothing to do with how many packs exist. See
+[`../README.md`](../README.md#conformed-dimensions-still-matter-with-one-pack).
 
 ---
 

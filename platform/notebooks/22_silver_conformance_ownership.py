@@ -7,7 +7,7 @@ unit path and manager hierarchy resolved. SCD2.
 WHY THIS MATTERS: records are owned by a user or a team; users and teams sit in
 hierarchical business units. That hierarchy is BOTH a reporting dimension (performance by
 region or manager) AND the source of the security model. Building it once serves both —
-which is why it lives in the conformance layer rather than in each pack.
+which is why it lives in the conformance layer rather than in the pack.
 
 SCD2 is required here, not optional: territory and manager reassignment is constant in
 sales organizations, and attributing last year's results to this year's manager is wrong.

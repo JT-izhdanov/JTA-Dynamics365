@@ -2,19 +2,32 @@
 
 ## What this repository is
 
-The home of the **JourneyTeam Analytics for Dynamics 365 Customer Engagement** offering —
-a packaged Fabric + Power BI solution sold to Dynamics 365 CE customers. It holds the
-commercial definition of the offering, the reference architecture, the reusable Fabric and
-Power BI IP, and the delivery playbook.
+The home of the **JourneyTeam Analytics for Dynamics 365 Sales** offering — a packaged
+Fabric + Power BI solution sold to Dynamics 365 Sales customers. It holds the commercial
+definition of the offering, the reference architecture, the reusable Fabric and Power BI IP,
+and the delivery playbook.
 
 It is a sibling to the JourneyTeam Analytics for Business Central offering. Keep the two
 consistent in structure, pricing ladder, and naming — they are sold as one portfolio.
 
+## Scope
+
+**This repository covers Dynamics 365 Sales only.** The offering was originally designed
+around four Customer Engagement report packs (Sales, Customer Service, Project Operations,
+Field Service) plus a cross-app Revenue-to-Delivery pack. Those are **deferred**: their
+drafts were removed and the analysis is recoverable from git history — see
+`docs/offering/roadmap.md`.
+
+Do not reintroduce Customer Service, Project Operations, Field Service, or cross-app
+content into this repository unless the offering owner brings a pack back into scope. Keep
+the *platform* generic where that costs nothing (the conformance layer is deliberately
+app-agnostic), but do not document or price a pack that does not exist here.
+
 ## The core architectural fact
 
-Dynamics 365 CE apps (Sales, Customer Service, Project Operations, Field Service) all sit
-on **Dataverse**. Dataverse data reaches OneLake through **Link to Microsoft Fabric** — a
-first-party, zero-copy shortcut. There is no custom extension and no ETL for ingestion.
+Dynamics 365 Sales sits on **Dataverse**. Dataverse data reaches OneLake through **Link to
+Microsoft Fabric** — a first-party, zero-copy shortcut. There is no custom extension and no
+ETL for ingestion.
 
 The consequence, which shapes everything in this repo: **ingestion is not the IP.** Anyone
 can enable Link to Fabric. The defensible value is:
@@ -22,15 +35,19 @@ can enable Link to Fabric. The defensible value is:
 1. The **Silver conformance layer** that makes Dataverse usable for BI (choice labels,
    currency normalization, polymorphic activities, state/status, ownership hierarchy).
 2. **Snapshot facts** — Dataverse stores current state only, so point-in-time pipeline,
-   case aging, and backlog history do not exist in any first-party report. We build them.
-3. **Cross-app semantic models** spanning Sales → Project Operations → Field Service.
+   forecast movement, and aging do not exist in any first-party report. We build them.
 
-When making design or documentation choices, protect those three things.
+When making design or documentation choices, protect those two things.
+
+A third differentiator — cross-app semantic models spanning several Dynamics apps — was
+central to the original design and is out of scope with one pack. It was the only
+differentiator with no first-party equivalent, so note the gap when positioning; do not
+quietly claim it.
 
 ## Conventions
 
 - **Dataverse table names** are lowercase logical names (`account`, `opportunity`,
-  `incident`, `msdyn_workorder`). Always use logical names, never display names.
+  `opportunityproduct`, `systemuser`). Always use logical names, never display names.
 - **Notebooks** live in `platform/notebooks/` as plain `.py` authoring drafts, numbered by
   medallion stage (`10_` Bronze, `2x_` Silver conformance, `3x_` snapshots, `4x_` Gold).
   See `platform/notebooks/README.md` before adding one.

@@ -62,8 +62,8 @@ at *any* table — Lead, Opportunity, Case, Work Order. There is no clean foreig
 bridge with one row per activity and one typed key column per target entity. Downstream
 models then join activities to the subject area without re-solving polymorphism.
 
-Activity analytics — touches per opportunity, response time on a case — is one of the
-highest-value question sets and one of the most annoying to build. Doing it once is worth
+Activity analytics — touches per opportunity, contact cadence, activity-to-outcome — is one
+of the highest-value question sets and one of the most annoying to build. Doing it once is worth
 disproportionately more than it costs.
 
 ### 4. State versus status
@@ -74,8 +74,8 @@ using one without the other is a common source of wrong counts — an Opportunit
 `statecode = 1` (Won) is a very different claim from one that is merely closed.
 
 **Approach:** decode both, keep both, and add an explicit conformed status grouping per
-table (`Open` / `Won` / `Lost` / `Cancelled` and equivalents) so cross-app reports can
-reason about lifecycle consistently. Never expose the raw integers to the semantic model.
+table (`Open` / `Won` / `Lost` / `Cancelled` and equivalents) so reports reason about
+lifecycle consistently across tables. Never expose the raw integers to the semantic model.
 
 ### 5. Ownership hierarchy
 
@@ -114,32 +114,33 @@ This is important enough that it has its own document —
 
 | Conformed artifact | Serves |
 |---|---|
-| `dim_date` (with fiscal calendar) | every pack |
-| `dim_customer` (account) | every pack |
-| `dim_contact` | every pack |
-| `dim_owner` (user / team / business unit, hierarchies resolved) | every pack, and RLS |
-| `dim_currency` | every pack with money |
-| `dim_product` | Sales, Field Service, Project Operations |
-| `dim_territory` | Sales, Field Service |
-| `dim_project` | Project Operations, Revenue-to-Delivery |
-| `dim_resource` | Field Service, Project Operations |
+| `dim_date` (with fiscal calendar) | all facts |
+| `dim_customer` (account) | all facts |
+| `dim_contact` | all facts |
+| `dim_owner` (user / team / business unit, hierarchies resolved) | all facts, and RLS |
+| `dim_currency` | all money |
+| `dim_product` | Sales |
+| `dim_territory` | Sales |
+| `dim_resource` | Sales — `jt_presalesresource` is a `bookableresource`, not a `systemuser` |
 | `lkp_choice_label` | every Silver table |
-| `bridge_activity` | every pack |
+| `bridge_activity` | all activity analytics |
 
 Definitions live in [`../../packs/_shared/conformed-dimensions.md`](../../packs/_shared/conformed-dimensions.md).
 
 ## Rules
 
-1. **A pack never defines its own conformed dimension.** If Sales needs a Customer
-   dimension, it consumes `dim_customer`. A pack-local copy defeats the entire
-   cross-app premise and is the failure mode most likely to creep in under delivery
-   pressure.
+1. **The pack never defines its own conformed dimension.** If Sales needs a Customer
+   dimension, it consumes `dim_customer` — not a `sales_dim_customer`. Building these
+   conformed is what makes the layer reusable IP rather than one customer's Sales model,
+   and it is the rule most likely to be broken under delivery pressure. It is also a
+   correctness rule, not only a reuse one: `dim_owner` is SCD2 so that historical pipeline
+   attributes to the owner at the time.
 2. **Every conformance rule is a notebook, not a one-off fix.** If it was worth fixing for
    one customer it is worth fixing for all of them.
 3. **Nothing is hard-coded per customer.** Fiscal calendar, language, base currency,
    business unit depth, and table selection are configuration. See `platform/config/`.
 4. **Conformance logic is versioned.** A customer on version 1.2 of the conformance layer
    must be identifiable, because the upgrade path depends on it. See the known gap in
-   [`../offering/roadmap.md`](../offering/roadmap.md#known-gaps-in-the-offering-as-currently-defined).
+   [`../offering/roadmap.md`](../offering/roadmap.md#known-gaps).
 5. **Document the trap, not just the fix.** The traps above are why this layer has value.
    Anyone can write the transformation once they know the problem exists.
