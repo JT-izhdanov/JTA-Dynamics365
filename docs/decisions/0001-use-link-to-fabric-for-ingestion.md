@@ -58,10 +58,11 @@ must sit entirely in the layers above ingestion:
 
 1. The [Dataverse conformance layer](../architecture/conformance-layer.md)
 2. [Snapshot history](../architecture/snapshot-and-history.md)
-3. Cross-app semantic models — **no longer in scope**; see
-   [ADR 0004](0004-cross-app-pack-packaging.md), deferred with the packs it spanned. It was
-   the only one of the three with no first-party equivalent, so losing it narrows the
-   competitive story, not the architecture.
+3. Cross-app semantic models — **intended, not yet built**; see
+   [ADR 0004](0004-cross-app-pack-packaging.md), deferred with the packs it spanned. It is
+   the only one of the three with no first-party equivalent, so its absence narrows the
+   competitive story today without changing the architecture — the platform is kept
+   app-agnostic precisely so it stays cheap to add.
 
 Every pricing, positioning, and build-sequence decision in this repository follows from
 that. Sales material must move past ingestion quickly and land on the conformance layer —

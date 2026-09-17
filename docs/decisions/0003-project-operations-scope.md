@@ -2,10 +2,12 @@
 
 **Status:** **Deferred** — Project Operations is out of scope for this repository
 
-> **Deferred with the pack, 2026-09-17.** The repository was narrowed to Dynamics 365 Sales
-> only, so this decision is not live. The body below is unedited — it holds reasoning worth
-> keeping if the pack returns. See
-> [`../offering/roadmap.md`](../offering/roadmap.md).
+> **Deferred, not cancelled — 2026-09-17.** The repository was narrowed to Dynamics 365
+> Sales as its working space, so this decision is not live. It is the **first thing to
+> answer if a delivery-side pack returns**, which is the cheapest route back to the
+> cross-app functionality that is still intended — see
+> [`../offering/roadmap.md`](../offering/roadmap.md#what-narrowing-costs-now-and-what-it-does-not).
+> The body below is unedited.
 
 
 ## Context

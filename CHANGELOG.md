@@ -50,11 +50,31 @@ are deferred.
   $12,500 single fixed price** (platform $7,500 + Sales $5,000 + 4 hours coaching; list
   value $13,760) — **proposed, not agreed.** Nothing is quotable and no sales asset stating
   a price can be produced until it is signed off
-- **The offering loses a differentiator.** Cross-app analytics was one of three stated
-  defensible pillars and **the only one with no first-party equivalent**. Differentiation
-  now rests on the conformance layer and snapshot history — both real, both narrower.
-  `positioning.md` and the deck outline were changed to lead with history and custom
-  fields rather than quietly keeping a claim the repository can no longer support
+- **The offering is a differentiator short until cross-app ships.** Cross-app analytics is
+  one of three stated defensible pillars and **the only one with no first-party
+  equivalent**. It is **deferred, not cancelled** — it is intended and will be built, but
+  it needs a second, delivery-side pack before it has anything to span. Until then
+  differentiation rests on the conformance layer and snapshot history — both real, both
+  narrower. `positioning.md` and the deck outline lead with history and custom fields, and
+  deliberately do **not** carry cross-app as a roadmap item: a differentiator that cannot
+  be demoed costs more credibility than one never raised
+
+### Kept general on purpose, so cross-app stays cheap to add
+
+The repository is a working space for Sales, not a Sales-shaped product, and the platform
+carries generality one pack does not need:
+
+- Conformed dimensions stay conformed and unprefixed — a second pack that cannot point at
+  the same `dim_customer` and `dim_owner` cannot be joined to this one at all
+- Gold keeps its `sales__` pack prefix, so a second pack lands without renaming anything
+- `bridge_activity` keeps resolving polymorphic targets rather than hard-coding Sales
+- `dim_owner` stays SCD2 and remains the source of the RLS model
+- `quote` / `salesorder` stay in the Bronze set — the project contract is built on
+  `salesorder`, which is the join point from pipeline into delivery
+
+`roadmap.md` now carries this as a table with the reason and the file for each, plus the
+cheapest route back: a delivery-side pack, since Revenue-to-Delivery has nothing to span on
+its own. ADR 0003 is the first question to answer on that route
 - **Timeline inconsistency flagged, not silently resolved.** The playbook is three sprints
   over six weeks; the offering now quotes 4–5 weeks. The saving is entirely in Sprint 2
   (one pack, not two to four), so Sprint 2 is marked as one week pending a real number from

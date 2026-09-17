@@ -8,9 +8,10 @@ Each slide names where its content comes from, so the deck never becomes an inde
 source of facts that can drift.
 
 > **Scope: Dynamics 365 Sales only.** The outline was 27 slides covering four report packs
-> plus a cross-app pack. It is now 20 — four pack-detail slides and the cross-app slide are
-> gone, and Sales gets the airtime instead. See
-> [`../docs/offering/roadmap.md`](../docs/offering/roadmap.md).
+> plus a cross-app pack. It is now 20 — the four pack-detail slides and the cross-app slide
+> come out and Sales gets the airtime instead. Those packs are **deferred, not cancelled**,
+> and cross-app is still intended; they return to this outline when they exist, not before.
+> See [`../docs/offering/roadmap.md`](../docs/offering/roadmap.md).
 
 | # | Slide | Content source |
 |---|---|---|
@@ -65,9 +66,10 @@ it to you. Making it answer questions is the part you're buying."*
 ### 3. Slides 12–13 replace the four pack slides
 
 The old outline gave one slide each to Sales, Customer Service, Project Operations and
-Field Service, plus a full slide to the cross-app pack. With one pack, that breadth is gone
-and pretending otherwise is not an option — **do not show a pack that does not exist, even
-marked as roadmap.**
+Field Service, plus a full slide to the cross-app pack. With one pack that breadth is not
+available yet — **do not show a pack that does not exist, even marked as roadmap.** Another
+pack and the cross-app model are intended, but a roadmap slide is a commitment a prospect
+will hold us to, and there is no date behind it.
 
 Spend the reclaimed slides on depth instead: the report pages, and one worked pipeline
 story from open pipeline through weighted forecast to win rate. Depth on the one pack is a
@@ -79,9 +81,12 @@ The BC deck compares against Microsoft's BC Power BI apps and wins easily. **Thi
 comparison is harder and must be honest.** Dynamics 365 Sales ships respectable first-party
 analytics and Sales Premium adds forecasting; a prospect using them will know.
 
-**The cross-app row is gone from this table** — it was the one first-party could not answer
-at all. Lead instead with the two rows where the gap is not arguable: **history** and
-**custom fields**. Use the table in `positioning.md#competitive-frame` and the framing:
+**The cross-app row is out of this table until the capability exists** — it was the one
+first-party could not answer at all, and it is still intended, but a differentiator we
+cannot demo is worse than one we do not mention.
+
+Lead instead with the two rows where the gap is not arguable: **history** and **custom
+fields**. Use the table in `positioning.md#competitive-frame` and the framing:
 *first-party Sales analytics are fine for standard questions about current state; this is
 for non-standard questions, custom fields, and questions about the past.*
 

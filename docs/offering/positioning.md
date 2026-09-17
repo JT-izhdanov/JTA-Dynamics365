@@ -1,8 +1,9 @@
 # Positioning
 
 > **Scope: Dynamics 365 Sales only.** Claims below are written for a single-pack offering.
-> Anything that depended on spanning several Dynamics apps has been removed rather than
-> softened — see [`roadmap.md`](roadmap.md).
+> Anything that depended on spanning several Dynamics apps is out rather than softened —
+> cross-app is **intended and will be built**, but it is not sellable until it exists. See
+> [`roadmap.md`](roadmap.md#what-narrowing-costs-now-and-what-it-does-not).
 
 ## Problem statement
 
@@ -84,10 +85,13 @@ is bad, and it is true.
 
 **What the single-pack scope costs this slide.** Cross-app analytics — one model spanning
 Sales into delivery — used to sit in this table as the row first-party cannot answer at
-all. With Sales alone it is gone, and the differentiation rests on custom schema, history,
-and model ownership. Those are real but narrower. Against a prospect already running
-first-party Sales analytics, lead with **history and custom fields**; they are the two rows
-where the gap is not arguable.
+all. It is **still intended and will be built**, but it does not exist yet, so it is out of
+the table: a differentiator we cannot demo costs more credibility than one we never raise.
+
+Until it does, differentiation rests on custom schema, history, and model ownership — real,
+but narrower. Against a prospect already running first-party Sales analytics, lead with
+**history and custom fields**; they are the two rows where the gap is not arguable. Do not
+sell cross-app as coming, and do not put a date on it.
 
 ### What we are actually competing against
 
@@ -115,8 +119,10 @@ make sure the architecture slide shows the other apps already have a place to la
 
 **Be careful how this is worded now.** The landing zone is real — the conformance layer and
 conformed dimensions are built app-agnostic precisely so another app can be added without a
-rebuild. What does *not* exist is a second Dynamics 365 packaged pack to add. Sell the
-architecture, not a pack that is not GA.
+rebuild, and that generality is a deliberate cost carried for exactly this reason. What
+does *not* exist is a second Dynamics 365 packaged pack to add. **Sell the architecture,
+not a pack that is not GA**, and note that Business Central is a real second edition today
+while a second CE pack is not.
 
 ## Call to action
 

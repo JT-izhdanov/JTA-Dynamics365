@@ -1,7 +1,9 @@
 # Report packs
 
-**This repository covers the Dynamics 365 Sales pack only.** Other packs are deferred —
-see [`../docs/offering/roadmap.md`](../docs/offering/roadmap.md).
+**This repository covers the Dynamics 365 Sales pack only.** Other packs are deferred, and
+cross-app functionality is still intended — see
+[`../docs/offering/roadmap.md`](../docs/offering/roadmap.md#what-narrowing-costs-now-and-what-it-does-not)
+for what is deliberately kept general so a second pack stays cheap to add.
 
 | Pack | Dynamics 365 app | Status |
 |---|---|---|
@@ -21,8 +23,8 @@ packs/
     └── reports/          Power BI reports (see below)
 ```
 
-The `packs/<pack>/` nesting is kept with one pack in it deliberately. Flattening now and
-re-nesting when a second pack arrives is churn for one path segment.
+The `packs/<pack>/` nesting is kept with one pack in it deliberately. A second pack is
+expected eventually; flattening now and re-nesting then is churn for one path segment.
 
 ## Conformed dimensions still matter with one pack
 
@@ -33,7 +35,9 @@ With a single pack that looks like over-engineering. It isn't, for two reasons:
 
 1. **The conformance layer is the offering's IP.** Its value is that it is reusable, and
    reusability is decided when the dimension is built, not when a second consumer appears.
-   A `sales_dim_customer` would have to be rebuilt.
+   A `sales_dim_customer` would have to be rebuilt — and a second pack that cannot point at
+   the same `dim_customer` and `dim_owner` cannot be joined to this one at all, which is
+   the whole cross-app premise.
 2. **Snapshot history depends on it.** `dim_owner` is SCD2 so that historical pipeline is
    attributed to the owner at the time. That design has nothing to do with multiple packs
    and everything to do with correctness.

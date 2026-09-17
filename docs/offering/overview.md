@@ -66,9 +66,11 @@ defensible on two things Microsoft's own analytics do not do:
    pipeline or forecast movement. See
    [`../architecture/snapshot-and-history.md`](../architecture/snapshot-and-history.md).
 
-A third differentiator — cross-app models spanning several Dynamics apps — was central to
-the original four-pack design and is **out of scope here**. It returns if and when a second
-pack does.
+A third — cross-app models spanning several Dynamics apps — is central to the offering's
+longer-term story and is **intended**, but it needs a second pack before it has anything to
+span. It is not in scope here and must not be sold, implied, or shown as a roadmap item
+until it exists. See [`roadmap.md`](roadmap.md#what-narrowing-costs-now-and-what-it-does-not)
+for what is being kept general so it stays cheap to add.
 
 ## Relationship to the Business Central offering
 

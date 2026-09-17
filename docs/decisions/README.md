@@ -36,8 +36,10 @@ unedited because the reasoning is what makes the pack cheap to bring back.
 | [0003](0003-project-operations-scope.md) | Project Operations pack deployment scope | **Deferred** |
 | [0004](0004-cross-app-pack-packaging.md) | Revenue-to-Delivery pack packaging | **Deferred** |
 
-0003 and 0004 were deferred when the repository narrowed to Sales only. 0002 is still
-Proposed and is now partly overtaken by that narrowing.
+0003 and 0004 were deferred when the repository narrowed to Sales only. **Deferred means
+not live, not cancelled** — cross-app functionality is still intended, and 0003 is the
+first question to answer on the way back to it. 0002 is still Proposed and is now partly
+overtaken by that narrowing.
 
 ## ADRs this repository still owes
 

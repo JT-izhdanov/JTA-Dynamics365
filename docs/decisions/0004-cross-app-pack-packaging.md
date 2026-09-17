@@ -1,11 +1,16 @@
 # 0004 — Revenue-to-Delivery pack packaging
 
-**Status:** **Deferred** — the cross-app pack is out of scope for this repository
+**Status:** **Deferred** — the cross-app pack is out of scope for this repository, but it
+is **intended and will be built**
 
-> **Deferred with the pack, 2026-09-17.** The repository was narrowed to Dynamics 365 Sales
-> only, so this decision is not live. The body below is unedited — it holds reasoning worth
-> keeping if the pack returns. See
-> [`../offering/roadmap.md`](../offering/roadmap.md).
+> **Deferred, not cancelled — 2026-09-17.** The repository was narrowed to Dynamics 365
+> Sales as its working space, so this decision is not live: Revenue-to-Delivery needs a
+> second, delivery-side pack before it has anything to span. The body below is unedited and
+> is expected to be revisited rather than replaced — the pricing options in it assume a
+> four-pack tier ladder that no longer exists, so the packaging conclusion will need
+> rework even though the architectural reasoning holds. See
+> [`../offering/roadmap.md`](../offering/roadmap.md#what-narrowing-costs-now-and-what-it-does-not)
+> for what is deliberately being kept general so this stays cheap to add.
 
 
 ## Context
