@@ -4,6 +4,9 @@ Component 2 of the customer-facing architecture narrative. The conformance rules
 themselves are in [`conformance-layer.md`](conformance-layer.md); this document covers
 layout, naming, and orchestration.
 
+**Column-level schemas for all three layers** — every table, its grain, its columns, and
+its keys — are in [`medallion-schemas.md`](medallion-schemas.md).
+
 ## Layers
 
 | Layer | Contents | Written by | Customer-facing description |

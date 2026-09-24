@@ -12,6 +12,10 @@ still holds with a single pack.
 > **Draft.** Column lists are written from general Dataverse knowledge, not validated
 > against a live environment. Correct them during the first build.
 
+**Full column-level definitions**, including what the notebooks actually emit today, are
+in [`../../docs/architecture/medallion-schemas.md`](../../docs/architecture/medallion-schemas.md).
+This document covers the inventory and the reasoning; that one covers the physical schema.
+
 ## Inventory
 
 | Dimension | Built by | Grain | SCD | Used by |
