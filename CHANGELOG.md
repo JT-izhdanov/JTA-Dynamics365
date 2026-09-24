@@ -12,6 +12,28 @@ offering release, not per commit.
 
 ## [Unreleased]
 
+### Added — medallion schema reference
+
+- `docs/architecture/medallion-schemas.md` — the physical schema contract for Bronze,
+  Silver and Gold: every table, its grain, its columns, its types and its keys. Column
+  lists for the built tables are read from the notebook source rather than restated from
+  design docs, so the document records what the code actually emits
+- Bronze section documents the **Link to Fabric sink columns** (`IsDelete`, `PartitionId`,
+  `SinkCreatedOn`/`SinkModifiedOn`) and the `<column>` / `<column>_entitytype` /
+  `<column>name` lookup triple, both confirmed in the JTP export
+- Status marker on every table — **BUILT** (a notebook emits it), **SPECIFIED** (designed,
+  no notebook), **VERIFY** (depends on unconfirmed Dataverse behaviour)
+- **Eight schema-level open issues (§8)** found by reading the notebooks against the
+  design and the Bronze profile. The consequential ones: no notebook filters `IsDelete`;
+  `owner_key` is generated per owner rather than per version in both `22_` and `23_`, which
+  breaks the moment SCD2 lands and compounds with the `WHERE is_current` filter in `40_`
+  (decision D9); `bu_level_N` runs leaf-to-root, which inverts every hierarchy visual and
+  the `own_business_unit_and_below` RLS expansion; `23_` reads
+  `regardingobjecttypecode` while the profile shows `_entitytype` pairs, which would leave
+  every typed key in `bridge_activity` NULL
+- Cross-references added from `README.md`, `docs/architecture/medallion-design.md` and
+  `packs/_shared/conformed-dimensions.md`
+
 ### Added — end-to-end solution technical design
 
 - `docs/architecture/solution-technical-design.md` — the implementable design for the whole

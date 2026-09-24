@@ -69,6 +69,7 @@ sales-assets/     Customer-facing deck, one-pagers, demo script
 | Building the solution end to end | [`docs/architecture/solution-technical-design.md`](docs/architecture/solution-technical-design.md) — ingestion → medallion → model → Power BI → Data Agent |
 | Building or extending the IP | [`docs/architecture/reference-architecture.md`](docs/architecture/reference-architecture.md), [`platform/README.md`](platform/README.md) |
 | Mapping a Dataverse entity | [`docs/bronze-profiling/`](docs/bronze-profiling/) — what is **actually** in the export |
+| Building a table in any layer | [`docs/architecture/medallion-schemas.md`](docs/architecture/medallion-schemas.md) — every Bronze, Silver and Gold table, column by column |
 | Building the report pack | [`packs/README.md`](packs/README.md), [`packs/sales/technical-design.md`](packs/sales/technical-design.md) |
 
 ## Working against Fabric
